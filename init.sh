@@ -41,26 +41,45 @@ if [ ! -f $ALIAS ]
 then
 	touch $ALIAS
 	echo "alias script=\"sudo $DIRECTORY/deployment.sh\"" >> $ALIAS
-	echo "alias edit=\"sudo vim $DIRECTORY/deployment.sh\"" >> $ALIAS
+	echo "alias edit=\"sudo vim $DIRECTORY/init.sh\"" >> $ALIAS
+	echo "set number
+	syntax on" > /home/$USER/.vimrc
 fi
 rm -f $DIRECTORY/deployment.sh
-echo "#!/bin/bash
+echo -e "#!/bin/bash
 
-# Variables
+#COLORS
+GREEN='\033[32m'
+RED='\033[1;31m'
+RES='\033[0m'
 
 install() {
-for package in "$@"
+for package in \"\$@\"
 do
-	if [ $(dpkg-query -W -f='${Status}' $package 2>/dev/null | grep "ok installed") -eq 0 ];
+	if [ \$(dpkg-query -W -f='\${Status}' \$package 2>/dev/null | grep -c \"ok installed\") -eq \"0\" ]
 	then
-		apt-get install $package;
+		echo -e \"\${GREEN}Installation de \${package} \${RES}\";
+		apt-get -y install \$package
+		if [ \$? -ne \"0\" ]; then
+			echo -e \"\${RED}échec de l'installation de \${package}\${RES}\";
+		fi
+	else
+		echo -e \"\${GREEN}\${package} déjà installé\${RES}\";
 	fi
+done
 }
 
-install net-tools fail2ban
+install vim git sudo net-tools fail2ban
 
 " > $DIRECTORY/deployment.sh
 chmod +x $DIRECTORY/deployment.sh
 
 echo -e "${YL}SUCCESS\n$USER can know launch VM configuration by running command \"script\"$RES"
 exit 0;
+
+clean() {
+echo "Cleaning up..."
+apt autoremove -yy
+apt autoclean
+}
+clean
