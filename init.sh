@@ -49,7 +49,12 @@ echo "#!/bin/bash
 # Variables
 
 install() {
-
+for package in "$@"
+do
+	if [ $(dpkg-query -W -f='${Status}' $package 2>/dev/null | grep "ok installed") -eq 0 ];
+	then
+		apt-get install $package;
+	fi
 }
 
 install net-tools fail2ban
