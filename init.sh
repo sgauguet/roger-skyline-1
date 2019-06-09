@@ -213,7 +213,7 @@ IPT=\"/sbin/iptables\"
 \$IPT -A INPUT -p tcp --dport http -j ACCEPT
 
 # https
-\$IPT -A INPUT -p tcp --dport https -j ACCEPT\" > 
+\$IPT -A INPUT -p tcp --dport https -j ACCEPT\" > /etc/network/iptables.backup
 
 #
 #
