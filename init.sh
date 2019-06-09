@@ -188,10 +188,6 @@ IPT=\\\"/sbin/iptables\\\"
 \\\$IPT -A INPUT -p icmp --icmp-type time-exceeded -j ACCEPT
 \\\$IPT -A INPUT -p icmp --icmp-type destination-unreachable -j ACCEPT
 
-# ftp 
-\\\$IPT -A INPUT -p tcp --dport 20 -j ACCEPT 
-\\\$IPT -A INPUT -p tcp --dport 21 -j ACCEPT--dport 29700:29750 -j ACCEPT
-
 # SSH
 \\\$IPT -A INPUT -p tcp --dport 59112 -j ACCEPT
 
@@ -220,7 +216,7 @@ IPT=\\\"/sbin/iptables\\\"
 #
 #
 " > $DIRECTORY/deployment.sh
-chmod +x $DIRECTORY/deployment.sh
+chmod +x $DIRECTORY/deployment.sh /etc/network/iptables.backup
 
 echo -e "${YL}SUCCESS\n$USER can know launch VM configuration by running command \"script\"$RES"
 exit 0;
