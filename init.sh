@@ -153,67 +153,67 @@ fi
 echo \"#!/bin/bash
 
 # Variables
-IP=\$(/sbin/ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1  -d'/')
-IPT=\"/sbin/iptables\"
+IP=\\\$(/sbin/ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1  -d'/')
+IPT=\\\"/sbin/iptables\"
 
 # Reinitialisation
-\$IPT -F
-\$IPT -X
-\$IPT -t nat -F
-\$IPT -t nat -X
-\$IPT -t mangle -F
-\$IPT -t mangle -X
+\\\$IPT -F
+\\\$IPT -X
+\\\$IPT -t nat -F
+\\\$IPT -t nat -X
+\\\$IPT -t mangle -F
+\\\$IPT -t mangle -X
 
 # Blocage par defaut du trafic entrant
-\$IPT -P INPUT DROP
+\\\$IPT -P INPUT DROP
 # Blocage par defaut du forward
-\$IPT -P FORWARD DROP
+\\\$IPT -P FORWARD DROP
 # Blocage par defaut du trafic sortant
-\$IPT -P OUTPUT DROP
+\\\$IPT -P OUTPUT DROP
 
 # Blocage des scans XMAS et NULL
-\$IPT -A INPUT -p tcp --tcp-flags FIN,URG,PSH FIN,URG,PSH -j DROP
-\$IPT -A INPUT -p tcp --tcp-flags ALL ALL -j DROP
-\$IPT -A INPUT -p tcp --tcp-flags ALL NONE -j DROP
-\$IPT -A INPUT -p tcp --tcp-flags SYN,RST SYN,RST -j DROP
+\\\$IPT -A INPUT -p tcp --tcp-flags FIN,URG,PSH FIN,URG,PSH -j DROP
+\\\$IPT -A INPUT -p tcp --tcp-flags ALL ALL -j DROP
+\\\$IPT -A INPUT -p tcp --tcp-flags ALL NONE -j DROP
+\\\$IPT -A INPUT -p tcp --tcp-flags SYN,RST SYN,RST -j DROP
 
 # Permettre à une connexion ouverte de recevoir du trafic en entrée.
-\$IPT -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+\\\$IPT -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 
 # Pas de filtrage sur la boucle locale
-\$IPT -A INPUT -i lo -j ACCEPT
+\\\$IPT -A INPUT -i lo -j ACCEPT
  
 # Ping
-\$IPT -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
-\$IPT -A INPUT -p icmp --icmp-type time-exceeded -j ACCEPT
-\$IPT -A INPUT -p icmp --icmp-type destination-unreachable -j ACCEPT
+\\\$IPT -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
+\\\$IPT -A INPUT -p icmp --icmp-type time-exceeded -j ACCEPT
+\\\$IPT -A INPUT -p icmp --icmp-type destination-unreachable -j ACCEPT
 
 # ftp 
-\$IPT -A INPUT -p tcp --dport 20 -j ACCEPT 
-\$IPT -A INPUT -p tcp --dport 21 -j ACCEPT--dport 29700:29750 -j ACCEPT
+\\\$IPT -A INPUT -p tcp --dport 20 -j ACCEPT 
+\\\$IPT -A INPUT -p tcp --dport 21 -j ACCEPT--dport 29700:29750 -j ACCEPT
 
 # SSH
-\$IPT -A INPUT -p tcp --dport 59112 -j ACCEPT
+\\\$IPT -A INPUT -p tcp --dport 59112 -j ACCEPT
 
 # NTP
-\$IPT -A INPUT -p udp --dport 123 -j ACCEPT
+\\\$IPT -A INPUT -p udp --dport 123 -j ACCEPT
 
 # smtp
-\$IPT -A INPUT -p tcp --dport smtp -j ACCEPT
+\\\$IPT -A INPUT -p tcp --dport smtp -j ACCEPT
 
 # imap(s)
-\$IPT -A INPUT -p tcp --dport 143 -j ACCEPT
-\$IPT -A INPUT -p tcp --dport 993 -j ACCEPT
+\\\$IPT -A INPUT -p tcp --dport 143 -j ACCEPT
+\\\$IPT -A INPUT -p tcp --dport 993 -j ACCEPT
 
 # dns
-\$IPT -A INPUT -p tcp --dport domain -j ACCEPT
-\$IPT -A INPUT -p udp --dport domain -j ACCEPT
+\\\$IPT -A INPUT -p tcp --dport domain -j ACCEPT
+\\\$IPT -A INPUT -p udp --dport domain -j ACCEPT
 
 # http
-\$IPT -A INPUT -p tcp --dport http -j ACCEPT
+\\\$IPT -A INPUT -p tcp --dport http -j ACCEPT
 
 # https
-\$IPT -A INPUT -p tcp --dport https -j ACCEPT\" > /etc/network/iptables.backup
+\\\$IPT -A INPUT -p tcp --dport https -j ACCEPT\" > /etc/network/iptables.backup
 
 #
 #
