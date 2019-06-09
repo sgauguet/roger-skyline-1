@@ -25,6 +25,11 @@ echo -e "${INT}**************
 **   INIT  ***
 **************$RES"
 
+mkdir -p /home/$USER/.ssh
+touch /home/$USER/.ssh/authorized_keys
+chmod 700 /home/$USER/.ssh
+chmod 700 /home/$USER/.ssh/authorized_keys
+chown -R $USER /home/$USER/.ssh
 echo -e "${GREEN}Gestion des utilisateurs - installation des paquets necessaires$RES"
 dpkg-query -W -f='${Status}' sudo 2> /dev/null | grep -c "ok installed" || apt-get install sudo
 dpkg-query -W -f='${Status}' vim 2> /dev/null | grep -c "ok installed" || apt-get install vim
@@ -79,8 +84,7 @@ do
 	fi
 done
 }
-
-install vim git sudo net-tools fail2ban nmap
+install vim git sudo net-tools fail2ban nmap openssh-server
 
 echo -e \"\${GREEN}Configuration du réseau - IP fixe\${RES}\";
 
@@ -121,9 +125,24 @@ then
 	cp \$SSH \$SSH.backup
 fi
 echo  -e \"\${GREEN}Modification du port SSH\$RES\"
-echo \"Port 59112\" >> \$SSH
+cat \$SSH.backup > \$SSH
+echo \"Port 59112
+PermitRootLogin no
+PermitEmptyPasswords yes
+#AuthentificationMethods password
+\" >> \$SSH
 service sshd restart
+echo -e \"\${GREEN}Publikeys SSH\${RES}\"
+ssh-keygen -t rsa -f /home/\$USER/.ssh/id_rsa -P \"\"
+ssh-copy-id -f -i /home/\$USER/.ssh/id_rsa.pub -p 59112 \$USER@10.177.42.221
 echo -e \"\${GREEN}Test de la nouvelle configuration\${RES}\"
+cat \$SSH.backup > \$SSH
+echo \"Port 59112
+PermitRootLogin no
+PermitEmptyPasswords no
+AuthenticationMethods publickey
+\" >> \$SSH
+service sshd restart
 if [ \$(nmap -A -p 59112 --open 10.177.42.220/30 | grep -c open ) -eq 0 ]
 then
 	echo -e \"\${RED}Echec\$RES\"
@@ -131,9 +150,8 @@ then
 else
 	echo -e \"\${GREEN}Success\${RES}\"
 fi
-echo -e \"\${GREEN}Publikeys SSH\${RES}\"
-ssh-keygen -t rsa
-ssh-copy-id -i id id_rsa.pub \"-p 59112 \$USER@10.177.42.221\"
+echo "#!/bin/bash
+
 
 #
 #
