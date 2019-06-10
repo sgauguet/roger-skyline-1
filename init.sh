@@ -337,7 +337,7 @@ sysctl -p &>/dev/null
 
 echo  -e \"\${GREEN}Configuration de fail2ban\$RES\"
 cp $F2B/jail.conf $F2B/jail.local
-echo "ignoreip = 127.0.0.1/8, $IP
+echo \"ignoreip = 127.0.0.1/8, $IP
 [ssh]
 
 enabled  = true
@@ -345,7 +345,7 @@ port     = 59112
 filter   = sshd
 logpath  = /var/log/auth.log
 maxretry = 6
-" >> $F2B/jail.local
+\" >> $F2B/jail.local
 
 systemctl enable fail2ban
 systemctl start fail2ban
