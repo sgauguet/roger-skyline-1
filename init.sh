@@ -332,8 +332,8 @@ then
 fi
 
 cat <<EOF > /etc/sysctl.conf
-net.netfilter.nf_conntrack_tcp_loose=0
-net.ipv4.tcp_timestamps=1
+net.netfilter.nf_conntrack_tcp_loose = 0
+net.ipv4.tcp_timestamps = 1
 net.netfilter.nf_conntrack_max = 200000
 EOF
 sysctl -p &>/dev/null
