@@ -47,6 +47,7 @@ then
 	touch $ALIAS
 	echo "alias script=\"sudo $DIRECTORY/deployment.sh\"" >> $ALIAS
 	echo "alias edit=\"sudo vim $DIRECTORY/init.sh\"" >> $ALIAS
+	echo "alias logs=\"sudo /var/log/messages\"" >> $ALIAS
 	echo "set number
 	syntax on" > /home/$USER/.vimrc
 fi
@@ -65,7 +66,7 @@ RED='\033[1;31m'
 RES='\033[0m'
 
 if ((\$EUID != 0)); then
-	echo -e \"\${RED}Please run as root\${RES}\"
+	echo -e \"\${RED}Please run with sudo\${RES}\"
 	exit 1;
 fi
 
@@ -84,7 +85,7 @@ do
 	fi
 done
 }
-install vim git sudo net-tools fail2ban nmap openssh-server
+install vim git sudo net-tools fail2ban nmap openssh-server iptables-persistent
 
 echo -e \"\${GREEN}Configuration du réseau - IP fixe\${RES}\";
 
@@ -209,7 +210,13 @@ IPT=\\\"/sbin/iptables\\\"
 \\\$IPT -A INPUT -p tcp --dport http -j ACCEPT
 
 # https
-\\\$IPT -A INPUT -p tcp --dport https -j ACCEPT\" > /etc/network/iptables.backup
+\\\$IPT -A INPUT -p tcp --dport https -j ACCEPT
+
+# Logs
+\\\$IPT -A INPUT -j LOG --log-prefix \\\"-- IPv4 packet rejected -- \\\"
+\" > /etc/network/iptables.backup
+
+iptables-save > /etc/network/iptables.backup
 
 #
 #
