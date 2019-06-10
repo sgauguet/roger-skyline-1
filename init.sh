@@ -363,7 +363,7 @@ systemctl start fail2ban
 
 ########################################################################################
 
-chmod +x $DIRECTORY/deployment.sh /etc/network/iptables.backup
+chmod +x $DIRECTORY/deployment.sh /etc/network/iptables.rules
 
 echo -e "${YL}SUCCESS\n$USER can know launch VM configuration by running command \"script\"$RES"
 
