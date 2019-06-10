@@ -331,11 +331,10 @@ then
 	cp /etc/sysctl.conf /etc/sysctl.conf.backup
 fi
 
-cat <<EOF > /etc/sysctl.conf
-net.netfilter.nf_conntrack_tcp_loose = 0
+echo \"net.netfilter.nf_conntrack_tcp_loose = 0
 net.ipv4.tcp_timestamps = 1
-net.netfilter.nf_conntrack_max = 200000
-EOF
+net.netfilter.nf_conntrack_max = 200000\" >> /etc/sysctl.conf
+
 sysctl -p &>/dev/null
 
 # Parametrage de fail2ban
