@@ -152,6 +152,8 @@ dns-nameserver 10.188.0.1\" >> /\$NI/interfaces
 
 # Mise a jour et test de la configuration du reseau
 
+sudo ifdown enp0s3 &>/dev/null
+sudo ifup enp0s3 &>/dev/null
 /etc/init.d/networking restart
 
 echo -e \"\${GREEN}Test de la nouvelle configuration\${RES}\"
