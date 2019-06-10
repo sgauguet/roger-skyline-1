@@ -32,8 +32,10 @@ echo -e "${INT}**************
 **************$RES"
 
 echo -e "${GREEN}Gestion des utilisateurs - installation des paquets necessaires$RES"
-$(dpkg-query -W -f='${Status}' sudo 2> /dev/null | grep -c "ok installed") -eq 1 || apt-get install sudo
-$(dpkg-query -W -f='${Status}' vim 2> /dev/null | grep -c "ok installed") -eq 1 || apt-get install vim
+if [ $(dpkg-query -W -f='${Status}' sudo 2> /dev/null | grep -c "ok installed") -eq 0 ]; then
+	apt-get install sudo
+if [ $(dpkg-query -W -f='${Status}' vim 2> /dev/null | grep -c "ok installed") -eq 0 ]; then
+	apt-get install vim
 echo  -e "${GREEN}Parametrage des droits de l'utilisateur non root$RES"
 if [ ! -f $BACKUP ]
 then
