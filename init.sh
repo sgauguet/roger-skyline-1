@@ -50,6 +50,8 @@ then
 	echo "alias logs=\"sudo /var/log/messages\"" >> $ALIAS
 	echo "set number
 	syntax on" > /home/$USER/.vimrc
+	echo "set number
+	syntax on" > /root/.vimrc
 fi
 rm -f $DIRECTORY/deployment.sh
 echo "#!/bin/bash
