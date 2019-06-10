@@ -310,6 +310,7 @@ then
 	echo  -e \"\${RED}Erreur\$RES\"
 	exit 1
 else
+	chmod +x /etc/network/iptables.rules
 	/etc/network/iptables.rules
 fi
 
@@ -362,7 +363,7 @@ systemctl start fail2ban
 
 ########################################################################################
 
-chmod +x $DIRECTORY/deployment.sh /etc/network/iptables.rules
+chmod +x $DIRECTORY/deployment.sh
 
 echo -e "${YL}SUCCESS\n$USER can know launch VM configuration by running command \"script\"$RES"
 
