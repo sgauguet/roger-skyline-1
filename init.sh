@@ -1,6 +1,10 @@
 #!/bin/bash
 
-# Variables 
+########################################################################################
+########################## Init script run by root #####################################
+########################################################################################
+
+# Variables - script d'initialisation
 
 DIRECTORY=$(cd `dirname $0` && pwd)
 SUDOERS='/etc/sudoers'
@@ -16,6 +20,8 @@ INT='\033[1;30m'
 RED='\033[1;31m'
 RES='\033[0m'
 
+# Verification - le script doit etre lance par root
+
 if (($EUID != 0)); then
 	echo -e "${RED}Please run as root${RES}"
 	exit 1;
@@ -25,11 +31,6 @@ echo -e "${INT}**************
 **   INIT  ***
 **************$RES"
 
-mkdir -p /home/$USER/.ssh
-touch /home/$USER/.ssh/authorized_keys
-chmod 700 /home/$USER/.ssh
-chmod 700 /home/$USER/.ssh/authorized_keys
-chown -R $USER /home/$USER/.ssh
 echo -e "${GREEN}Gestion des utilisateurs - installation des paquets necessaires$RES"
 dpkg-query -W -f='${Status}' sudo 2> /dev/null | grep -c "ok installed" || apt-get install sudo
 dpkg-query -W -f='${Status}' vim 2> /dev/null | grep -c "ok installed" || apt-get install vim
@@ -41,36 +42,65 @@ then
 fi
 echo "$USER ALL=(ALL:ALL) ALL" >> $SUDOERS
 
+# Configuration de l'acces SSH de l'utilisateur
+
+mkdir -p /home/$USER/.ssh
+touch /home/$USER/.ssh/authorized_keys
+chmod 700 /home/$USER/.ssh
+chmod 700 /home/$USER/.ssh/authorized_keys
+chown -R $USER /home/$USER/.ssh
+
+# Creation des alias / necessite source ~./bashrc pour etre active
+# edit = modifier le script d'installation
+# script = lancer le script d'installation
+# logs = consulter les logs
+
 echo  -e "${GREEN}Creation des alias$RES"
 if [ ! -f $ALIAS ]
 then
 	touch $ALIAS
 	echo "alias script=\"sudo $DIRECTORY/deployment.sh\"" >> $ALIAS
 	echo "alias edit=\"sudo vim $DIRECTORY/init.sh\"" >> $ALIAS
-	echo "alias logs=\"sudo /var/log/messages\"" >> $ALIAS
+	echo "alias logs=\"sudo tail -n 20 /var/log/messages\"" >> $ALIAS
+	
+	# Configuration de vim
+	
 	echo "set number
 	syntax on" > /home/$USER/.vimrc
 	echo "set number
 	syntax on" > /root/.vimrc
 fi
+
+########################################################################################
+########################## Configuration script run by user ############################
+########################################################################################
+
 rm -f $DIRECTORY/deployment.sh
 echo "#!/bin/bash
 
-# Variables
+# Variables - script de configuration
+
 NI='/etc/network'
 RESOLV='/etc/resolv.conf'
 SSH='/etc/ssh/sshd_config'
+F2B='/etc/fail2ban'
 USER='sgauguet'
+IP='10.177.42.221'
 
 # Couleurs
+
 GREEN='\033[32m'
 RED='\033[1;31m'
 RES='\033[0m'
+
+# Verification - le script doit etre lance avec sudo
 
 if ((\$EUID != 0)); then
 	echo -e \"\${RED}Please run with sudo\${RES}\"
 	exit 1;
 fi
+
+# Installation des paquets
 
 install() {
 for package in \"\$@\"
@@ -87,7 +117,10 @@ do
 	fi
 done
 }
+
 install vim git sudo net-tools fail2ban nmap openssh-server iptables-persistent
+
+# Configuration de l'adresse IP
 
 echo -e \"\${GREEN}Configuration du réseau - IP fixe\${RES}\";
 
@@ -97,11 +130,13 @@ then
 	cp \$NI/interfaces \$NI/interfaces.backup
 	cp \$RESOLV \$RESOLV.backup
 fi
+
 echo -e \"\${GREEN}Mise en place de la nouvelle configuration\${RES}\"
+
 sed -i '11,\$d' \$NI/interfaces
 echo \"auto enp0s3
 iface enp0s3 inet static
-address 10.177.42.221
+address $IP
 netmask 255.255.255.252
 broadcast 10.177.42.223
 network 10.177.42.220
@@ -110,7 +145,11 @@ dns-search 42.fr
 dns-nameserver 10.51.1.42
 dns-nameserver 10.51.1.43
 dns-nameserver 10.188.0.1\" >> /\$NI/interfaces
+
+# Mise a jour et test de la configuration du reseau
+
 /etc/init.d/networking restart
+
 echo -e \"\${GREEN}Test de la nouvelle configuration\${RES}\"
 if [ ping -c4 www.google.fr &> /dev/null ]
 then
@@ -120,6 +159,8 @@ else
 	echo -e \"\${GREEN}Success\${RES}\"
 fi
 
+# Configuration de l'acces SSH
+
 echo -e \"\${GREEN}Configuration SSH\${RES}\";
 
 if [ ! -f \$SSH.backup ]
@@ -127,25 +168,36 @@ then
 	echo  -e \"\${GREEN}Sauvegarde de la configuration ssh : \$SSH.backup\$RES\"
 	cp \$SSH \$SSH.backup
 fi
+
 echo  -e \"\${GREEN}Modification du port SSH\$RES\"
+
 cat \$SSH.backup > \$SSH
 echo \"Port 59112
 PermitRootLogin no
 PermitEmptyPasswords yes
 #AuthentificationMethods password
 \" >> \$SSH
+
 service sshd restart
+
+# Acces par publickeys
+
 echo -e \"\${GREEN}Publikeys SSH\${RES}\"
 ssh-keygen -t rsa -f /home/\$USER/.ssh/id_rsa -P \"\"
 ssh-copy-id -f -i /home/\$USER/.ssh/id_rsa.pub -p 59112 \$USER@10.177.42.221
-echo -e \"\${GREEN}Test de la nouvelle configuration\${RES}\"
+
 cat \$SSH.backup > \$SSH
 echo \"Port 59112
 PermitRootLogin no
 PermitEmptyPasswords no
 AuthenticationMethods publickey
 \" >> \$SSH
+
 service sshd restart
+
+# Test de la configuration SSH
+
+echo -e \"\${GREEN}Test de la nouvelle configuration\${RES}\"
 if [ \$(nmap -A -p 59112 --open 10.177.42.220/30 | grep -c open ) -eq 0 ]
 then
 	echo -e \"\${RED}Echec\$RES\"
@@ -153,6 +205,9 @@ then
 else
 	echo -e \"\${GREEN}Success\${RES}\"
 fi
+
+########################## Script de configuration d'iptables ##########################
+
 echo \"#!/bin/bash
 
 # Variables
@@ -241,17 +296,36 @@ IPT=\\\"/sbin/iptables\\\"
 \\\$IPT -A INPUT -j LOG --log-prefix \\\"-- IPv4 packet rejected -- \\\"
 \" > /etc/network/iptables.backup
 
+########################################################################################
+
+# Activation du pare-feu
+
+echo  -e \"\${GREEN}Mise en place du parefeu\$RES\"
+if [ ! -f /etc/network/iptables.backup ]
+then
+	echo  -e \"\${RED}Erreur\$RES\"
+	exit 1
+else
+	/etc/network/iptables.backup
+fi
+
 if [ \$(lsmod | grep -c conntrack) -eq 0 ]
 then
 	modprob ip_conntrack
 fi
+
+# Enregistrement des regles du pare-feu
+
 iptables-save > /etc/network/iptables.backup
+
+# Configuration du kernel
 
 if [ ! -f /etc/sysctl.conf.backup ]
 then
 	echo  -e \"\${GREEN}Sauvegarde de systctl.conf\$RES\"
 	cp /etc/sysctl.conf /etc/sysctl.conf.backup
 fi
+
 cat <<EOF > /etc/sysctl.conf
 net.netfilter.nf_conntrack_tcp_loose=0
 net.ipv4.tcp_timestamps=1
@@ -259,14 +333,35 @@ net.netfilter.nf_conntrack_max = 200000
 EOF
 sysctl -p &>/dev/null
 
+# Parametrage de fail2ban
+
+echo  -e \"\${GREEN}Configuration de fail2ban\$RES\"
+cp $F2B/jail.conf $F2B/jail.local
+echo "ignoreip = 127.0.0.1/8, $IP
+[ssh]
+
+enabled  = true
+port     = 59112
+filter   = sshd
+logpath  = /var/log/auth.log
+maxretry = 6
+" >> $F2B/jail.local
+
+systemctl enable fail2ban
+systemctl start fail2ban
+
 #
 #
 #
 #
 " > $DIRECTORY/deployment.sh
+
+########################################################################################
+
 chmod +x $DIRECTORY/deployment.sh /etc/network/iptables.backup
 
 echo -e "${YL}SUCCESS\n$USER can know launch VM configuration by running command \"script\"$RES"
+
 exit 0;
 
 clean() {
