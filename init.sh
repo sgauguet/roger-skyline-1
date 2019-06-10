@@ -140,7 +140,7 @@ echo -e \"\${GREEN}Mise en place de la nouvelle configuration\${RES}\"
 sed -i '11,\$d' \$NI/interfaces
 echo \"auto enp0s3
 iface enp0s3 inet static
-address $IP
+address \$IP
 netmask 255.255.255.252
 broadcast 10.177.42.223
 network 10.177.42.220
