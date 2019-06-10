@@ -294,19 +294,19 @@ IPT=\\\"/sbin/iptables\\\"
 
 # Logs
 \\\$IPT -A INPUT -j LOG --log-prefix \\\"-- IPv4 packet rejected -- \\\"
-\" > /etc/network/iptables.backup
+\" > /etc/network/iptables.rules
 
 ########################################################################################
 
 # Activation du pare-feu
 
 echo  -e \"\${GREEN}Mise en place du parefeu\$RES\"
-if [ ! -f /etc/network/iptables.backup ]
+if [ ! -f /etc/network/iptables.rules ]
 then
 	echo  -e \"\${RED}Erreur\$RES\"
 	exit 1
 else
-	/etc/network/iptables.backup
+	/etc/network/iptables.rules
 fi
 
 if [ \$(lsmod | grep -c conntrack) -eq 0 ]
@@ -316,7 +316,8 @@ fi
 
 # Enregistrement des regles du pare-feu
 
-iptables-save > /etc/network/iptables.backup
+iptables-save > /etc/iptables/rules.v4
+ip6tables-save > /etc/iptables/rules.v6
 
 # Configuration du kernel
 
@@ -336,8 +337,8 @@ sysctl -p &>/dev/null
 # Parametrage de fail2ban
 
 echo  -e \"\${GREEN}Configuration de fail2ban\$RES\"
-cp $F2B/jail.conf $F2B/jail.local
-echo \"ignoreip = 127.0.0.1/8, $IP
+cp \$F2B/jail.conf \$F2B/jail.local
+echo \"ignoreip = 127.0.0.1/8, \$IP
 [ssh]
 
 enabled  = true
@@ -345,7 +346,7 @@ port     = 59112
 filter   = sshd
 logpath  = /var/log/auth.log
 maxretry = 6
-\" >> $F2B/jail.local
+\" >> \$F2B/jail.local
 
 systemctl enable fail2ban
 systemctl start fail2ban
