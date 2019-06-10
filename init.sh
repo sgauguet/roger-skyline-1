@@ -367,7 +367,7 @@ systemctl start fail2ban
 
 chmod +x $DIRECTORY/deployment.sh
 
-echo -e "${YL}SUCCESS\n$USER can know launch VM configuration by running command \"script\"$RES"
+echo -e "${YL}SUCCESS\n$USER can know launch VM configuration by running commands \"source .bashrc && script\"$RES"
 
 exit 0;
 
