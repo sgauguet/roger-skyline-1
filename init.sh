@@ -182,7 +182,30 @@ IPT=\\\"/sbin/iptables\\\"
 
 # Pas de filtrage sur la boucle locale
 \\\$IPT -A INPUT -i lo -j ACCEPT
- 
+
+# paquet avec SYN et FIN à la fois
+\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,SYN FIN,SYN -j DROP
+# paquet avec SYN et RST à la fois
+\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags SYN,RST SYN,RST -j DROP
+# paquet avec FIN et RST à la fois
+\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,RST FIN,RST -j DROP
+# paquet avec FIN mais sans ACK
+\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,ACK FIN -j DROP
+# paquet avec URG mais sans ACK
+\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags ACK,URG URG -j DROP
+# paquet avec PSH mais sans ACK
+\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags PSH,ACK PSH -j DROP
+# paquet avec tous les flags à 1 <=> XMAS scan dans Nmap
+\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG FIN,SYN,RST,PSH,ACK,URG -j DROP
+# paquet avec tous les flags à 0 <=> Null scan dans Nmap
+\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG NONE -j DROP
+# paquet avec FIN,PSH, et URG mais sans SYN, RST ou ACK
+\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG FIN,PSH,URG -j DROP
+# paquet avec FIN,SYN,PSH,URG mais sans ACK ou RST
+\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG FIN,SYN,PSH,URG -j DROP
+# paquet avec FIN,SYN,RST,ACK,URG à 1 mais pas PSH
+\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG FIN,SYN,RST,ACK,URG -j DROP 
+
 # Ping
 \\\$IPT -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
 \\\$IPT -A INPUT -p icmp --icmp-type time-exceeded -j ACCEPT
@@ -210,6 +233,13 @@ IPT=\\\"/sbin/iptables\\\"
 
 # https
 \\\$IPT -A INPUT -p tcp --dport https -j ACCEPT\" > /etc/network/iptables.backup
+
+cat <<EOF > /etc/sysctl.conf
+net.netfilter.nf_conntrack_tcp_loose=0
+net.ipv4.tcp_timestamps=1
+net.netfilter.nf_conntrack_max = 200000
+EOF
+sysctl -p
 
 #
 #
