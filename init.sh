@@ -227,7 +227,7 @@ IPT=\\\"/sbin/iptables\\\"
 # Blocage par defaut du forward
 \\\$IPT -P FORWARD DROP
 # Blocage par defaut du trafic sortant
-\\\$IPT -P OUTPUT DROP
+\\\$IPT -P OUTPUT ACCEPT
 
 # Blocage des scans XMAS et NULL
 \\\$IPT -A INPUT -p tcp --tcp-flags FIN,URG,PSH FIN,URG,PSH -j DROP
