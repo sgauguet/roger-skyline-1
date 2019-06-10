@@ -241,14 +241,23 @@ IPT=\\\"/sbin/iptables\\\"
 \\\$IPT -A INPUT -j LOG --log-prefix \\\"-- IPv4 packet rejected -- \\\"
 \" > /etc/network/iptables.backup
 
+if [ \$(lsmod | grep -c conntrack) -eq 0 ]
+then
+	modprob ip_conntrack
+fi
 iptables-save > /etc/network/iptables.backup
 
+if [ ! -f /etc/sysctl.conf.backup ]
+then
+	echo  -e \"\${GREEN}Sauvegarde de systctl.conf\$RES\"
+	cp /etc/sysctl.conf /etc/sysctl.conf.backup
+fi
 cat <<EOF > /etc/sysctl.conf
 net.netfilter.nf_conntrack_tcp_loose=0
 net.ipv4.tcp_timestamps=1
 net.netfilter.nf_conntrack_max = 200000
 EOF
-sysctl -p
+sysctl -p &>/dev/null
 
 #
 #
