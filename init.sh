@@ -122,7 +122,17 @@ do
 done
 }
 
-install vim git sudo net-tools fail2ban nmap openssh-server iptables-persistent
+install vim git sudo net-tools fail2ban nmap openssh-server iptables-persistent curl gnupg2 ca-certificates lsb-release
+
+if [ ! -f /etc/apt/sources.list.d/nginx.list ]
+then
+	echo \"deb http://nginx.org/package/debian `lsb_release -cs` nginx
+	\" > /etc/apt/sources.list.d/nginx.list
+	curl -fsSL https://nginx.org/keys/nginx_signing.key | apt-key add -
+	apt-key fingerprint ABF5BD827BD9BF62
+	apt update
+	install nginx
+fi
 
 # Configuration de l'adresse IP
 
@@ -356,6 +366,8 @@ maxretry = 6
 
 systemctl enable fail2ban
 systemctl start fail2ban
+
+
 
 #
 #
