@@ -412,11 +412,11 @@ echo -e \\\"\\\$(date) - Mise à jour des dépôts
 apt-get update >> /var/log/update_script.log
 
 if [[ \\\$? != 0 ]]; then
-echo -e \\\"Erreur de mise à jour des dépôts
-\\\" >> /var/log/update_script.log
+echo -e \\\"Erreur de mise à jour des dépôts\\\" >> /var/log/update_script.log
 fi
 
-echo -e \\\"\\\$(date) - Mise à jour des paquets\\\" >> /var/log/update_script.log
+echo -e \\\"\\\$(date) - Mise à jour des paquets
+\\\" >> /var/log/update_script.log
 apt-get upgrade >> /var/log/update_script.log
 
 if [[ \\\$? != 0 ]]; then
