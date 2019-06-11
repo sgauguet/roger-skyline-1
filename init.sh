@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ########################################################################################
-########################## Init script run by root #####################################
+########################## Init script - run by root ###################################
 ########################################################################################
 
 # Variables - script d'initialisation
@@ -55,17 +55,17 @@ chmod 700 /home/$USER/.ssh/authorized_keys
 chown -R $USER /home/$USER/.ssh
 
 # Creation des alias / necessite source ~./bashrc pour etre active
-# edit = modifier le script d'installation
-# script = lancer le script d'installation
-# logs = consulter les logs
+	# -> rs1-edit = modifier le script d'installation
+	# -> rs1-exec = lancer le script d'installation
+	# -> rs1-logs = consulter les logs
 
 echo  -e "${GREEN}Creation des alias$RES"
 if [ ! -f $ALIAS ]
 then
 	touch $ALIAS
-	echo "alias script=\"sudo $DIRECTORY/deployment.sh\"" >> $ALIAS
-	echo "alias edit=\"sudo vim $DIRECTORY/init.sh\"" >> $ALIAS
-	echo "alias logs=\"sudo tail -n 20 /var/log/messages\"" >> $ALIAS
+	echo "alias rs1-edit=\"sudo $DIRECTORY/deployment.sh\"" >> $ALIAS
+	echo "alias rs1-exec=\"sudo vim $DIRECTORY/init.sh\"" >> $ALIAS
+	echo "alias rs1-logs=\"sudo tail -n 20 /var/log/messages\"" >> $ALIAS
 	
 	# Configuration de vim
 	
@@ -75,11 +75,12 @@ then
 	syntax on" > /root/.vimrc
 fi
 
+rm -f $DIRECTORY/deployment.sh
+
 ########################################################################################
-########################## Configuration script run by user ############################
+########################## Configuration script  - run by user #########################
 ########################################################################################
 
-rm -f $DIRECTORY/deployment.sh
 echo "#!/bin/bash
 
 # Variables - script de configuration
@@ -90,6 +91,7 @@ SSH='/etc/ssh/sshd_config'
 F2B='/etc/fail2ban'
 USER='sgauguet'
 IP='10.177.42.221'
+PORT_SSH='59112'
 
 # Couleurs
 
@@ -122,7 +124,7 @@ do
 done
 }
 
-install vim git sudo net-tools fail2ban nmap openssh-server iptables-persistent curl gnupg2 ca-certificates lsb-release
+install vim git sudo net-tools fail2ban nmap openssh-server iptables-persistent curl gnupg2 ca-certificates lsb-release portsentry
 
 if [ ! -f /etc/apt/sources.list.d/nginx.list ]
 then
@@ -162,8 +164,8 @@ dns-nameserver 10.188.0.1\" >> /\$NI/interfaces
 
 # Mise a jour et test de la configuration du reseau
 
-sudo ifdown enp0s3 &>/dev/null
-sudo ifup enp0s3 &>/dev/null
+ifdown enp0s3 &>/dev/null
+ifup enp0s3 &>/dev/null
 /etc/init.d/networking restart
 
 echo -e \"\${GREEN}Test de la nouvelle configuration\${RES}\"
@@ -188,7 +190,7 @@ fi
 echo  -e \"\${GREEN}Modification du port SSH\$RES\"
 
 cat \$SSH.backup > \$SSH
-echo \"Port 59112
+echo \"Port \$PORT_SSH
 PermitRootLogin no
 PermitEmptyPasswords yes
 #AuthentificationMethods password
@@ -196,14 +198,14 @@ PermitEmptyPasswords yes
 
 service sshd restart
 
-# Acces par publickeys
+# Mise en place de l'acces par publickeys
 
 echo -e \"\${GREEN}Publikeys SSH\${RES}\"
 ssh-keygen -t rsa -f /home/\$USER/.ssh/id_rsa -P \"\"
-ssh-copy-id -f -i /home/\$USER/.ssh/id_rsa.pub -p 59112 \$USER@10.177.42.221
+ssh-copy-id -f -i /home/\$USER/.ssh/id_rsa.pub -p \$PORT_SSH \$USER@\$IP
 
 cat \$SSH.backup > \$SSH
-echo \"Port 59112
+echo \"Port \$PORT_SSH
 PermitRootLogin no
 PermitEmptyPasswords no
 AuthenticationMethods publickey
@@ -258,27 +260,27 @@ IPT=\\\"/sbin/iptables\\\"
 \\\$IPT -A INPUT -i lo -j ACCEPT
 
 # paquet avec SYN et FIN à la fois
-\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,SYN FIN,SYN -j DROP
+#\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,SYN FIN,SYN -j DROP
 # paquet avec SYN et RST à la fois
-\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags SYN,RST SYN,RST -j DROP
+#\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags SYN,RST SYN,RST -j DROP
 # paquet avec FIN et RST à la fois
-\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,RST FIN,RST -j DROP
+#\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,RST FIN,RST -j DROP
 # paquet avec FIN mais sans ACK
-\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,ACK FIN -j DROP
+#\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,ACK FIN -j DROP
 # paquet avec URG mais sans ACK
-\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags ACK,URG URG -j DROP
+#\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags ACK,URG URG -j DROP
 # paquet avec PSH mais sans ACK
-\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags PSH,ACK PSH -j DROP
+#\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags PSH,ACK PSH -j DROP
 # paquet avec tous les flags à 1 <=> XMAS scan dans Nmap
-\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG FIN,SYN,RST,PSH,ACK,URG -j DROP
+#\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG FIN,SYN,RST,PSH,ACK,URG -j DROP
 # paquet avec tous les flags à 0 <=> Null scan dans Nmap
-\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG NONE -j DROP
+#\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG NONE -j DROP
 # paquet avec FIN,PSH, et URG mais sans SYN, RST ou ACK
-\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG FIN,PSH,URG -j DROP
+#\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG FIN,PSH,URG -j DROP
 # paquet avec FIN,SYN,PSH,URG mais sans ACK ou RST
-\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG FIN,SYN,PSH,URG -j DROP
+#\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG FIN,SYN,PSH,URG -j DROP
 # paquet avec FIN,SYN,RST,ACK,URG à 1 mais pas PSH
-\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG FIN,SYN,RST,ACK,URG -j DROP 
+#\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG FIN,SYN,RST,ACK,URG -j DROP 
 
 # Ping
 \\\$IPT -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
@@ -344,11 +346,27 @@ then
 	cp /etc/sysctl.conf /etc/sysctl.conf.backup
 fi
 
-echo \"net.netfilter.nf_conntrack_tcp_loose = 0
-net.ipv4.tcp_timestamps = 1
-net.netfilter.nf_conntrack_max = 200000\" >> /etc/sysctl.conf
+echo \"
+net.ipv4.conf.all.rp_filter = 1 # protection contre l’usurpation d’adresse IP / antispoofing
+net/ipv4/conf/all/log_martians = 1 # journalisation des paquets ayant une adresse IP mal formée 
+net/ipv4/conf/all/send_redirects = 0 # refus des redirections ICMP
+net/ipv4/conf/all/accept_redirects = 0 # refus des redirections ICMP
+net/ipv4/conf/all/accept_source_route = 0  # refus des paquets dont la source a été routée
+net/ipv4/tcp_syncookies = 1 # protection contre les dénis de service
+net/ipv4/icmp_echo_ignore_broadcasts = 1 # ignore les broadcast ICMP
+net.ipv4.icmp_ignore_bogus_error_responses = 1 # ignore les erreurs ICMP bogus
+net.ipv4.conf.all.accept_redirects = 0 # désactive la réponse aux ICMP redirects.
+net.ipv4.conf.all.send_redirects=0 # désactiver l’envoi de ICMP redirects.
+net.netfilter.nf_conntrack_tcp_timeout_established = 86400 # limite a 1 jour le delai maximum d'une connexion
+net.netfilter.nf_conntrack_tcp_loose = 0 # desactive la recuperation des connexions etablies
+net.ipv4.tcp_timestamps = 1 # active les timestamps
+net.netfilter.nf_conntrack_max = 65536# nombre de connexions simultanees\" >> /etc/sysctl.conf
 
 sysctl -p &>/dev/null
+
+# Détection et blocage des \"scans de ports\" 
+
+
 
 # Parametrage de fail2ban
 
