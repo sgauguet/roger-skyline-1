@@ -128,8 +128,8 @@ install vim git sudo net-tools fail2ban nmap openssh-server iptables-persistent 
 
 if [ ! -f /etc/apt/sources.list.d/nginx.list ]
 then
-	echo \"deb http://nginx.org/package/debian `lsb_release -cs` nginx
-	\" > /etc/apt/sources.list.d/nginx.list
+	echo \"deb http://nginx.org/packages/mainline/debian/ `lsb_release -cs` nginx
+	deb-src http://nginx.org/packages/mainline/debian/ stretch nginx\" > /etc/apt/sources.list.d/nginx.list
 	curl -fsSL https://nginx.org/keys/nginx_signing.key | apt-key add -
 	apt-key fingerprint ABF5BD827BD9BF62
 	apt update
