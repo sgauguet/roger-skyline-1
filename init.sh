@@ -380,7 +380,6 @@ sysctl -p &>/dev/null
 # Détection et blocage des \"scans de ports\" 
 
 
-
 # Parametrage de fail2ban
 
 echo  -e \"\${GREEN}Configuration de fail2ban\$RES\"
@@ -398,12 +397,41 @@ maxretry = 6
 systemctl enable fail2ban
 systemctl start fail2ban
 
+############## Script de mise a jour des sources et des packages #######################
 
+if [ ! -f \$NI/update.rules ]
+then
+echo \"#!/bin/bash
 
-#
-#
-#
-#
+# Variables
+GREEN='\033[32m'
+RED='\033[1;31m'
+RES='\033[0m'
+
+dpkg --configure -a
+apt-get install -f
+
+echo -e "${GREEN}$(`date`) - Mise à jour des dépôts${RES}" >> /var/log/update_script.log
+apt-get update >> /var/log/update_script.log
+
+if [[ $? == 0 ]]; then
+echo -e "${RED}$Erreur de mise à jour des dépôts${RES}" >> /var/log/update_script.log
+fi
+
+echo -e "${GREEN}$(`date`) - Mise à jour des paquet${RES}" >> /var/log/update_script.log
+apt-get upgrade >> /var/log/update_script.log
+
+if [[ $? == 0 ]]; then
+echo -e "${RED}$Erreur de mise à jour des paquets${RES}" >> /var/log/update_script.log
+fi
+
+apt-get --purge autoremove
+apt-get autoclean
+
+\" >> \$NI/update.rules
+chmod +x \$NI/update.rules
+fi
+
 " > $DIRECTORY/deployment.sh
 
 ########################################################################################
@@ -413,10 +441,3 @@ chmod +x $DIRECTORY/deployment.sh
 echo -e "${YL}SUCCESS\n$USER can know launch VM configuration by running commands \"source ~/.bashrc && script\"$RES"
 
 exit 0;
-
-clean() {
-echo "Cleaning up..."
-apt autoremove -yy
-apt autoclean
-}
-clean
