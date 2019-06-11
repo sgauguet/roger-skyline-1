@@ -419,7 +419,7 @@ if [[ \\\$? != 0 ]]; then
 echo -e \\\"\\\${RED}Erreur de mise à jour des dépôts\\\${RES}\\\" >> /var/log/update_script.log
 fi
 
-echo -e \\\"\\\${GREEN}\\\$(date) - Mise à jour des paquet\\\${RES}\\\" >> /var/log/update_script.log
+echo -e \\\"\\\${GREEN}\\\$(date) - Mise à jour des paquets\\\${RES}\\\" >> /var/log/update_script.log
 apt-get upgrade >> /var/log/update_script.log
 
 if [[ \\\$? != 0 ]]; then
