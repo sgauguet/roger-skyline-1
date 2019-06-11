@@ -63,8 +63,8 @@ echo  -e "${GREEN}Creation des alias$RES"
 if [ ! -f $ALIAS ]
 then
 	touch $ALIAS
-	echo "alias rs1-edit=\"sudo $DIRECTORY/deployment.sh\"" >> $ALIAS
-	echo "alias rs1-exec=\"sudo vim $DIRECTORY/init.sh\"" >> $ALIAS
+	echo "alias rs1-exec=\"sudo $DIRECTORY/deployment.sh\"" >> $ALIAS
+	echo "alias rs1-edit=\"sudo vim $DIRECTORY/init.sh\"" >> $ALIAS
 	echo "alias rs1-logs=\"sudo tail -n 20 /var/log/messages\"" >> $ALIAS
 	
 	# Configuration de vim
