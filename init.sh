@@ -399,6 +399,7 @@ systemctl start fail2ban
 
 ############## Script de mise a jour des sources et des packages #######################
 
+echo  -e \"\${GREEN}Mise a jour des sources et des paquets\$RES\"
 if [ ! -f \$NI/update.rules ]
 then
 echo \"#!/bin/bash
@@ -411,18 +412,18 @@ RES='\033[0m'
 dpkg --configure -a
 apt-get install -f
 
-echo -e "${GREEN}$(`date`) - Mise à jour des dépôts${RES}" >> /var/log/update_script.log
+echo -e \\\"\\\${GREEN}\\\$(date) - Mise à jour des dépôts\\\${RES}\\\" >> /var/log/update_script.log
 apt-get update >> /var/log/update_script.log
 
-if [[ $? == 0 ]]; then
-echo -e "${RED}$Erreur de mise à jour des dépôts${RES}" >> /var/log/update_script.log
+if [[ \\\$? != 0 ]]; then
+echo -e \\\"\\\${RED}Erreur de mise à jour des dépôts\\\${RES}\\\" >> /var/log/update_script.log
 fi
 
-echo -e "${GREEN}$(`date`) - Mise à jour des paquet${RES}" >> /var/log/update_script.log
+echo -e \\\"\\\${GREEN}\\\$(date) - Mise à jour des paquet\\\${RES}\\\" >> /var/log/update_script.log
 apt-get upgrade >> /var/log/update_script.log
 
-if [[ $? == 0 ]]; then
-echo -e "${RED}$Erreur de mise à jour des paquets${RES}" >> /var/log/update_script.log
+if [[ \\\$? != 0 ]]; then
+echo -e \\\"\\\${RED}Erreur de mise à jour des paquets\\\${RES}\\\" >> /var/log/update_script.log
 fi
 
 apt-get --purge autoremove
