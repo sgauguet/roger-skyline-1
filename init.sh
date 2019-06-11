@@ -340,27 +340,40 @@ ip6tables-save > /etc/iptables/rules.v6
 
 # Configuration du kernel
 
+# -> protection contre l’usurpation d’adresse IP / antispoofing
+# -> journalisation des paquets ayant une adresse IP mal formée 
+# -> refus des redirections ICMP
+# -> refus des paquets dont la source a été routée
+# -> protection contre les dénis de service
+# -> ignore les broadcast ICMP
+# -> ignore les erreurs ICMP bogus
+# -> désactive la réponse aux ICMP redirects.
+# -> désactiver l’envoi de ICMP redirects.
+# -> limite a 1 jour le delai maximum d'une connexion
+# -> desactive la recuperation des connexions etablies
+# -> active les timestamps
+# -> fixe le nombre de connexions simultanees
+
 if [ ! -f /etc/sysctl.conf.backup ]
 then
 	echo  -e \"\${GREEN}Sauvegarde de systctl.conf\$RES\"
 	cp /etc/sysctl.conf /etc/sysctl.conf.backup
 fi
 
-echo \"
-net.ipv4.conf.all.rp_filter = 1 # protection contre l’usurpation d’adresse IP / antispoofing
-net/ipv4/conf/all/log_martians = 1 # journalisation des paquets ayant une adresse IP mal formée 
-net/ipv4/conf/all/send_redirects = 0 # refus des redirections ICMP
-net/ipv4/conf/all/accept_redirects = 0 # refus des redirections ICMP
-net/ipv4/conf/all/accept_source_route = 0  # refus des paquets dont la source a été routée
-net/ipv4/tcp_syncookies = 1 # protection contre les dénis de service
-net/ipv4/icmp_echo_ignore_broadcasts = 1 # ignore les broadcast ICMP
-net.ipv4.icmp_ignore_bogus_error_responses = 1 # ignore les erreurs ICMP bogus
-net.ipv4.conf.all.accept_redirects = 0 # désactive la réponse aux ICMP redirects.
-net.ipv4.conf.all.send_redirects=0 # désactiver l’envoi de ICMP redirects.
-net.netfilter.nf_conntrack_tcp_timeout_established = 86400 # limite a 1 jour le delai maximum d'une connexion
-net.netfilter.nf_conntrack_tcp_loose = 0 # desactive la recuperation des connexions etablies
-net.ipv4.tcp_timestamps = 1 # active les timestamps
-net.netfilter.nf_conntrack_max = 65536# nombre de connexions simultanees\" >> /etc/sysctl.conf
+echo \"net.ipv4.conf.all.rp_filter = 1
+net/ipv4/conf/all/log_martians = 1
+net/ipv4/conf/all/send_redirects = 0
+net/ipv4/conf/all/accept_redirects = 0
+net/ipv4/conf/all/accept_source_route = 0
+net/ipv4/tcp_syncookies = 1
+net/ipv4/icmp_echo_ignore_broadcasts = 1
+net.ipv4.icmp_ignore_bogus_error_responses = 1
+net.ipv4.conf.all.accept_redirects = 0
+net.ipv4.conf.all.send_redirects= 0
+net.netfilter.nf_conntrack_tcp_timeout_established = 86400
+net.netfilter.nf_conntrack_tcp_loose = 0
+net.ipv4.tcp_timestamps = 1
+net.netfilter.nf_conntrack_max = 65536\" >> /etc/sysctl.conf
 
 sysctl -p &>/dev/null
 
