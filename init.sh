@@ -428,7 +428,10 @@ apt-get autoclean
 
 \" >> \$NI/update.rules
 chmod +x \$NI/update.rules
+(crontab -l 2>/dev/null; echo "* 4 * * 0 \$NI/update.rules") | crontab -
+
 fi
+
 
 " > $DIRECTORY/deployment.sh
 
