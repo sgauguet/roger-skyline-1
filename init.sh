@@ -443,7 +443,15 @@ mkdir -p /etc/systemd/system.save
 cp -r /etc/systemd/system /etc/systemd/system.save
 fi
 
-cp \$NI/update.rules /etc/systemd/system/update
+echo -e "[Unit]
+Description=Update packages 
+
+[Service]
+ExecStart=\$NI/update.rules
+
+[Install]
+WantedBy=multi-user.target" > /lib/systemd/system/update.service
+systemctl start update.service
 systemctl enable update.service
 
 # Creation de la mise a jour planifiee
