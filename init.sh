@@ -425,10 +425,23 @@ fi
 
 apt-get --purge autoremove
 apt-get autoclean
+exit 0;
 
 \" >> \$NI/update.rules
 chmod +x \$NI/update.rules
-(crontab -l 2>/dev/null; echo "0 4 * * 0 \$NI/update.rules") | crontab -
+cp \$NI/update.rules /etc/init.d/.
+systemctl daemon-reload
+update-rc.d update.rules defaults
+
+# Creation de la mise a jour planifiee
+
+echo -e \"${GREEN}Modification de la crontab\${RES}\"
+crontab -l > cron_list
+echo "0 4 * * 0 \$NI/update.rules") >> cron_list
+crontab cron_list
+rm -rf cron_list
+
+
 
 fi
 
