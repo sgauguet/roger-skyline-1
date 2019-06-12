@@ -437,11 +437,9 @@ update-rc.d update.rules defaults
 
 echo -e \"${GREEN}Modification de la crontab\${RES}\"
 crontab -l > cron_list
-echo "0 4 * * 0 \$NI/update.rules") >> cron_list
+echo \"0 4 * * 0 \$NI/update.rules\" >> cron_list
 crontab cron_list
 rm -rf cron_list
-
-
 
 fi
 
