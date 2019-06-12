@@ -403,6 +403,14 @@ echo  -e \"\${GREEN}Mise a jour des sources et des paquets\$RES\"
 if [ ! -f \$NI/update.rules ]
 then
 echo \"#!/bin/bash
+### BEGIN INIT INFO
+# Provides:          update
+# Required-Start:    $all
+# Required-Stop:
+# Default-Start:     2 3 4 5 
+# Default-Stop:
+# Short-Description: your description here
+### END INIT INFO
 
 dpkg --configure -a
 apt-get install -f
@@ -429,9 +437,14 @@ exit 0;
 
 \" >> \$NI/update.rules
 chmod +x \$NI/update.rules
-cp \$NI/update.rules /etc/init.d/.
-systemctl daemon-reload
-update-rc.d update.rules defaults
+
+if [ ! -d /etc/systemd/system.save ]; then
+mkdir -p /etc/systemd/system.save
+cp -r /etc/systemd/system /etc/systemd/system.save
+fi
+
+cp \$NI/update.rules /etc/systemd/system/update
+systemctl enable update.service
 
 # Creation de la mise a jour planifiee
 
