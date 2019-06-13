@@ -488,9 +488,9 @@ MESSAGE=\\\"Le fichier \\\${CRONTAB} a été modifié le \\\${CRONTAB_LAST_MODIF
 
 if [ \\\"\\\${CRONTAB_REGISTRATION_DATE}\\\" != \\\"\\\${CRONTAB_LAST_MODIF}\\\" ]; then
    echo \\\"\\\$MESSAGE\\\" | mail -s \\\"Modification du fichier \\\${CRONTAB}\\\" \\\"\\\${MAIL_ROOT}\\\";
-fi
+fi\" > /usr/local/bin/crontab-updates
 
-\" > /usr/local/bin/crontab-updates
+chmod +x /usr/local/bin/crontab-updates
 
 echo -e \"${GREEN}Modification de la crontab\${RES}\"
 crontab -l > cron_list
