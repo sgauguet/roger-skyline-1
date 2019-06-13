@@ -443,11 +443,11 @@ mkdir -p /etc/systemd/system.save
 cp -r /etc/systemd/system /etc/systemd/system.save
 fi
 
-echo -e \\\"[Unit]
+echo -e \"[Unit]
 Description=Update packages
 
 [Service]
-ExecStart=\\\$NI/update.rules
+ExecStart=\$NI/update.rules
 TimeoutSec=30
 Restart=on-failure
 RestartSec=30
@@ -456,7 +456,7 @@ StartLimitBurst=10
 
 [Install]
 WantedBy=multi-user.target
-\\\" > /lib/systemd/system/update.service
+\" > /lib/systemd/system/update.service
 
 systemctl start update.service
 systemctl enable update.service
