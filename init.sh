@@ -498,8 +498,6 @@ echo \"1 * * * * /usr/local/bin/crontab-updates\" >> cron_list
 crontab cron_list
 rm -rf cron_list
 
-fi
-
 " > $DIRECTORY/deployment.sh
 
 ########################################################################################
