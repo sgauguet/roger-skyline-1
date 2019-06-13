@@ -491,6 +491,8 @@ RES='\033[0m'
 if [ \\\"\\\${CRONTAB_REGISTRATION_DATE}\\\" != \\\"\\\${CRONTAB_LAST_MODIF}\\\" ]; then
    echo \\\"\\\$MESSAGE\\\" | mail -s \\\"Modification du fichier \\\${CRONTAB}\\\" \\\"\\\${MAIL_ROOT}\\\";
    echo -e \\\"\\\${RED}Modification de la crontab - mail send to root\\\${RES}\\\"
+   rm -rf \\\$CRONTAB_LOGS
+   \\\$CRONTAB_LAST_MODIF > \\\$CRONTAB_LOGS
 fi\" > /usr/local/bin/crontab-updates
 
 chmod +x /usr/local/bin/crontab-updates
