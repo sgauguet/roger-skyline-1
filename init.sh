@@ -483,16 +483,18 @@ CRONTAB='/etc/crontab'
 CRONTAB_LAST_MODIF=\\\$(date -r \\\${CRONTAB} '+%d/%m/%Y %H:%M')
 MAIL_ROOT='root@debian'
 CRONTAB_LOGS='/var/log/crontab.log'
-CRONTAB_REGISTRATION_DATE=\\\$(cat \\\$CRONTAB_LOGS || (\\\$(\\\$CRONTAB_LAST_MODIF > \\\$CRONTAB_LOGS) && cat \\\$CRONTAB_LOGS))
+CRONTAB_REGISTRATION_DATE=\\\$(<\\\$CRONTAB_LOGS)
 MESSAGE=\\\"Le fichier \\\${CRONTAB} a été modifié le \\\${CRONTAB_LAST_MODIF}\\\";
 RED='\033[1;31m'
 RES='\033[0m'
 
 if [ \\\"\\\${CRONTAB_REGISTRATION_DATE}\\\" != \\\"\\\${CRONTAB_LAST_MODIF}\\\" ]; then
-   echo \\\"\\\$MESSAGE\\\" | mail -s \\\"Modification du fichier \\\${CRONTAB}\\\" \\\"\\\${MAIL_ROOT}\\\";
-   echo -e \\\"\\\${RED}Modification de la crontab - mail send to root\\\${RES}\\\"
-   rm -rf \\\$CRONTAB_LOGS
-   \\\$CRONTAB_LAST_MODIF > \\\$CRONTAB_LOGS
+	if [ ! -z \\\"\\\${CRONTAB_REGISTRATION_DATE}\\\" ]; then
+	   echo \\\"\\\$MESSAGE\\\" | mail -s \\\"Modification du fichier \\\${CRONTAB}\\\" \\\"\\\${MAIL_ROOT}\\\";
+	   echo -e \\\"\\\${RED}Modification de la crontab - mail send to root\\\${RES}\\\"
+	fi
+	rm -rf \\\$CRONTAB_LOGS
+   	echo \\\$CRONTAB_LAST_MODIF > \\\$CRONTAB_LOGS
 fi\" > /usr/local/bin/crontab-updates
 
 chmod +x /usr/local/bin/crontab-updates
