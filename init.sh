@@ -471,6 +471,32 @@ rm -rf cron_list
 
 fi
 
+# Veille sur les modifications du fichier /etc/crontab
+
+
+echo  -e \"\${GREEN}Mise en place du suivi des modifications du fichier crontab\$RES\"
+
+echo \"#!/bin/bash
+# Variables
+CRONTAB="/etc/crontab"
+CRONTAB_LAST_MODIF=$(date -r ${CRONTAB} '+%d/%m/%Y %H:%M')
+MAIL_ROOT="root@debian"
+CRONTAB_LOGS="/var/log/crontab.log"
+CRONTAB_REGISTRATION_DATE="$(cat $CRONTAB_LOGS || ($(echo $CRONTAB_LAST_MODIF > $CRONTAB_LOGS) && cat $CRONTAB_LOGS))
+MESSAGE="Le fichier ${CRONTAB} a été modifié le ${CRONTAB_LAST_MODIF}";
+
+if [ "${CRONTAB_REGISTRATION_DATE}" != "${CRONTAB_LAST_MODIF}" ]; then
+   echo "$MESSAGE" | mail -s "Modification du fichier ${CRONTAB}" "${MAIL_ROOT}";
+fi
+\" > /usr/local/bin/crontab-updates
+
+echo -e \"${GREEN}Modification de la crontab\${RES}\"
+crontab -l > cron_list
+echo \"1 * * * * /usr/local/bin/crontab-updates\" >> cron_list
+crontab cron_list
+rm -rf cron_list
+
+fi
 
 " > $DIRECTORY/deployment.sh
 
