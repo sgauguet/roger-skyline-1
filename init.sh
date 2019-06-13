@@ -511,6 +511,7 @@ service cron start
 
 chmod +x $DIRECTORY/deployment.sh
 
-echo -e "${YL}SUCCESS\n$USER can know launch VM configuration by running commands \"source ~/.bashrc && script\"$RES"
+echo -e "${YL}SUCCESS\n$USER can know launch VM configuration.
+Please run \"source ~/.bashrc\", and then \"rs1-exec\"$RES"
 
 exit 0;
