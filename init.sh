@@ -466,7 +466,7 @@ systemctl enable update.service
 echo -e \"${GREEN}Modification de la crontab\${RES}\"
 crontab -l > cron_list
 echo \"0 4 * * 0 \$NI/update.rules\" >> cron_list
-crontab cron_list
+crontab -u $USER cron_list
 rm -rf cron_list
 
 fi
@@ -502,7 +502,7 @@ chmod +x /usr/local/bin/crontab-updates
 echo -e \"${GREEN}Modification de la crontab\${RES}\"
 crontab -l > cron_list
 echo \"1 * * * * /usr/local/bin/crontab-updates\" >> cron_list
-crontab cron_list
+crontab -u \$USER cron_list
 rm -rf cron_list
 
 " > $DIRECTORY/deployment.sh
