@@ -501,7 +501,7 @@ chmod +x /usr/local/sbin/crontab-updates
 
 echo -e \"${GREEN}Modification de la crontab\${RES}\"
 crontab -l > cron_list
-echo \"1 * * * * root /usr/local/sbin/crontab-updates\" >> cron_list
+echo \"*/1 * * * * /usr/local/sbin/crontab-updates\" >> cron_list
 crontab -u root cron_list
 rm -rf cron_list
 service cron start
