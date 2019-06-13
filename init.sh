@@ -443,26 +443,11 @@ mkdir -p /etc/systemd/system.save
 cp -r /etc/systemd/system /etc/systemd/system.save
 fi
 
-echo -e "[Unit]
-Description=Update packages 
+echo -e \"[Unit]
+Description=Update packages
 
 [Service]
 ExecStart=\$NI/update.rules
-
-[Install]
-WantedBy=multi-user.target
-
-[Unit]
-Description=Apache Spark Master and Slave Servers
-After=network.target
-After=systemd-user-sessions.service
-After=network-online.target
-
-[Service]
-User=spark
-Type=forking
-ExecStart=/opt/spark-1.6.1-bin-hadoop2.6/sbin/start-all.sh
-ExecStop=/opt/spark-1.6.1-bin-hadoop2.6/sbin/stop-all.sh
 TimeoutSec=30
 Restart=on-failure
 RestartSec=30
@@ -471,10 +456,8 @@ StartLimitBurst=10
 
 [Install]
 WantedBy=multi-user.target
+\" > /lib/systemd/system/update.service
 
-
-
-" > /lib/systemd/system/update.service
 systemctl start update.service
 systemctl enable update.service
 
