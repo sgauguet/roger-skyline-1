@@ -466,7 +466,7 @@ systemctl enable update.service
 echo -e \"${GREEN}Modification de la crontab\${RES}\"
 crontab -l > cron_list
 echo \"0 4 * * 0 \$NI/update.rules\" >> cron_list
-crontab -u root cron_list
+crontab cron_list
 rm -rf cron_list
 
 fi
@@ -495,14 +495,14 @@ if [ \\\"\\\${CRONTAB_REGISTRATION_DATE}\\\" != \\\"\\\${CRONTAB_LAST_MODIF}\\\"
 	fi
 	rm -rf \\\$CRONTAB_LOGS
    	echo \\\$CRONTAB_LAST_MODIF > \\\$CRONTAB_LOGS
-fi\" > /usr/local/bin/crontab-updates
+fi\" > /usr/local/sbin/crontab-updates
 
-chmod +x /usr/local/bin/crontab-updates
+chmod +x /usr/local/sbin/crontab-updates
 
 echo -e \"${GREEN}Modification de la crontab\${RES}\"
 crontab -l > cron_list
-echo \"1 * * * * /usr/local/bin/crontab-updates\" >> cron_list
-crontab -u root cron_list
+echo \"1 * * * * /usr/local/sbin/crontab-updates\" >> cron_list
+crontab cron_list
 rm -rf cron_list
 
 " > $DIRECTORY/deployment.sh
