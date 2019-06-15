@@ -156,7 +156,7 @@ address \$IP
 netmask 255.255.255.252
 broadcast 10.177.42.223
 network 10.177.42.220
-gateway 10.0.2.2
+gateway 10.177.42.222
 dns-search 42.fr
 dns-nameserver 10.51.1.42
 dns-nameserver 10.51.1.43
