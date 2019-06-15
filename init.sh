@@ -473,7 +473,6 @@ fi
 
 # Veille sur les modifications du fichier /etc/crontab
 
-
 echo  -e \"\${GREEN}Mise en place du suivi des modifications du fichier crontab\$RES\"
 
 echo \"#!/bin/bash
@@ -504,6 +503,13 @@ echo \"*/1 * * * * root /usr/local/sbin/crontab-updates\" >> cron_list
 crontab -u root cron_list
 rm -rf cron_list
 service cron start
+
+######################### Mise en place du serveur nginx ###############################
+
+mkdir -p /data/www && touch /data/www/index.html
+
+
+
 
 " > $DIRECTORY/deployment.sh
 
