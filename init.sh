@@ -521,7 +521,7 @@ ln -s /etc/nginx/sites-available/\$HOST_NAME /etc/nginx/sites-enabled/\$HOST_NAM
 cat > /etc/nginx/sites-available/\$HOST_NAME <<EOF
 server {
     server_name *.\$HOST_NAME;
-    return 301 \\\$scheme://\$HOST_NAME \\\$request_uri;
+    return 301 \\\$scheme://\$HOST_NAME\\\$request_uri;
 }
 server {
     server_name \$HOST_NAME;
