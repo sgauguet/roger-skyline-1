@@ -511,32 +511,32 @@ HOST_NAME='roger-skyline-1.fr'
 
 echo  -e \"\${GREEN}Configuration de nginx\$RES\"
 
-mkdir -p $WEB_DIR/$HOST_NAME/{html,logs}
-chown -R sgauguet:www-data $WEB_DIR
-chmod 755 $WEB_DIR
+mkdir -p \$WEB_DIR/\$HOST_NAME/{html,logs}
+chown -R sgauguet:www-data \$WEB_DIR/\$HOST_NAME
+chmod 755 \$WEB_DIR
 
-cp /etc/nginx/sites-available/default /etc/nginx/sites-available/$HOST_NAME
-ln -s /etc/nginx/sites-available/roger-skyline-1.fr /etc/nginx/sites-enabled/$HOST_NAME
+cp /etc/nginx/sites-available/default /etc/nginx/sites-available/\$HOST_NAME
+ln -s /etc/nginx/sites-available/\$HOST_NAME /etc/nginx/sites-enabled/\$HOST_NAME
 
-cat > /etc/nginx/sites-available/$HOST_NAME <<EOF
+cat > /etc/nginx/sites-available/\$HOST_NAME <<EOF
 server {
-    server_name *.$HOST_NAME;
-    return 301 '$scheme'://$HOST_NAME'$request_uri';
+    server_name *.\$HOST_NAME;
+    return 301 '$scheme'://\$HOST_NAME'$request_uri';
 }
 server {
-    server_name $HOST_NAME;
-    root        /data/www/$HOST_NAME/public_html;
+    server_name \$HOST_NAME;
+    root        /data/www/\$HOST_NAME/public_html;
 
     # Logs
-    access_log $WEB_DIR/$HOST_NAME/logs/access.log;
-    error_log  $WEB_DIR/$HOST_NAME/logs/error.log;
+    access_log \$WEB_DIR/\$HOST_NAME/logs/access.log;
+    error_log  \$WEB_DIR/\$HOST_NAME/logs/error.log;
 
     # Includes
     include global/common.conf;
 }
 EOF
 
-cat > $WEB_DIR/$HOST_NAME/html/index.html <<EOF
+cat > \$WEB_DIR/\$HOST_NAME/html/index.html <<EOF
 <!DOCTYPE html>
 <html lang="en">
 <head>
