@@ -509,6 +509,8 @@ service cron start
 WEB_DIR='/data/www'
 HOST_NAME='roger-skyline-1.fr'
 
+echo  -e \"\${GREEN}Configuration de nginx\$RES\"
+
 mkdir -p $WEB_DIR/$HOST_NAME/{html,logs}
 chown -R sgauguet:www-data $WEB_DIR
 chmod 755 $WEB_DIR
