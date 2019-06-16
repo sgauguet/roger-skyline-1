@@ -535,7 +535,7 @@ server {
 }
 EOF
 
-ln -s /etc/nginx/sites-available/\$HOST_NAME /etc/nginx/sites-enabled/\$HOST_NAME
+ln -s /etc/nginx/sites-available/\$HOST_NAME /etc/nginx/sites-enabled/\$HOST_NAME 2>/dev/null
 
 cat > \$WEB_DIR/\$HOST_NAME/html/index.html <<EOF
 <!DOCTYPE html>
