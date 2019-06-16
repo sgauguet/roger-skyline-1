@@ -562,7 +562,7 @@ service nginx restart
 
 chmod +x $DIRECTORY/deployment.sh
 
-echo -e "${YL}SUCCESS\n$USER can know launch VM configuration.
+echo -e "${YL}SUCCESS\n$USER can now launch VM configuration.
 Please run \"source ~/.bashrc\", and then \"rs1-exec\"$RES"
 
 exit 0;
