@@ -525,14 +525,14 @@ server {
 }
 server {
     server_name \$HOST_NAME;
-    root        /data/www/\$HOST_NAME/public_html;
+    root        /data/www/\$HOST_NAME/html;
 
     # Logs
     access_log \$WEB_DIR/\$HOST_NAME/logs/access.log;
     error_log  \$WEB_DIR/\$HOST_NAME/logs/error.log;
 
     # Includes
-    include global/common.conf;
+    #include global/common.conf;
 }
 EOF
 
