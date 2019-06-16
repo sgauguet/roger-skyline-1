@@ -515,8 +515,7 @@ mkdir -p \$WEB_DIR/\$HOST_NAME/{html,logs}
 chown -R sgauguet:www-data \$WEB_DIR/\$HOST_NAME
 chmod 755 \$WEB_DIR
 
-cp /etc/nginx/sites-available/default /etc/nginx/sites-available/\$HOST_NAME
-ln -s /etc/nginx/sites-available/\$HOST_NAME /etc/nginx/sites-enabled/\$HOST_NAME
+# cp /etc/nginx/sites-available/default /etc/nginx/sites-available/\$HOST_NAME
 
 cat > /etc/nginx/sites-available/\$HOST_NAME <<EOF
 server {
@@ -535,6 +534,8 @@ server {
     #include global/common.conf;
 }
 EOF
+
+ln -s /etc/nginx/sites-available/\$HOST_NAME /etc/nginx/sites-enabled/\$HOST_NAME
 
 cat > \$WEB_DIR/\$HOST_NAME/html/index.html <<EOF
 <!DOCTYPE html>
