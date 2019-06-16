@@ -506,10 +506,53 @@ service cron start
 
 ######################### Mise en place du serveur nginx ###############################
 
-mkdir -p /data/www && touch /data/www/index.html
+WEB_DIR='/data/www'
+HOST_NAME='roger-skyline-1.fr'
 
+mkdir -p $WEB_DIR/$HOST_NAME/{html,logs}
+chown -R sgauguet:www-data $WEB_DIR
+chmod 755 $WEB_DIR
 
+cp /etc/nginx/sites-available/default /etc/nginx/sites-available/$HOST_NAME
+ln -s /etc/nginx/sites-available/roger-skyline-1.fr /etc/nginx/sites-enabled/$HOST_NAME
 
+cat > /etc/nginx/sites-available/$HOST_NAME <<EOF
+server {
+    server_name *.$HOST_NAME;
+    return 301 '$scheme'://$HOST_NAME'$request_uri';
+}
+server {
+    server_name $HOST_NAME;
+    root        /data/www/$HOST_NAME/public_html;
+
+    # Logs
+    access_log $WEB_DIR/$HOST_NAME/logs/access.log;
+    error_log  $WEB_DIR/$HOST_NAME/logs/error.log;
+
+    # Includes
+    include global/common.conf;
+}
+EOF
+
+cat > $WEB_DIR/$HOST_NAME/html/index.html <<EOF
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <title>$1</title>
+        <meta charset="utf-8" />
+</head>
+<body class="container">
+        <header><h1>$1<h1></header>
+        <div id="wrapper">
+
+Hello World
+</div>
+        <footer>© $(date +%Y)</footer>
+</body>
+</html>
+EOF
+
+service nginx restart
 
 " > $DIRECTORY/deployment.sh
 
