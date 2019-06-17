@@ -555,7 +555,15 @@ Hello World
 </html>
 EOF
 
-service nginx restart
+/usr/local/nginx/sbin/nginx -t 2>/dev/null > /dev/null
+if [[ $? == 0 ]]; then
+ echo "success"
+ service nginx restart
+else
+ echo "fail"
+fi
+
+
 
 " > $DIRECTORY/deployment.sh
 
