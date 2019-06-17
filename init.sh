@@ -51,7 +51,7 @@ echo "$USER ALL=(ALL:ALL) ALL" >> $SUDOERS
 mkdir -p /home/$USER/.ssh
 touch /home/$USER/.ssh/authorized_keys
 chmod 700 /home/$USER/.ssh
-chmod 700 /home/$USER/.ssh/authorized_keys
+chmod 600 /home/$USER/.ssh/authorized_keys
 chown -R $USER /home/$USER/.ssh
 
 # Creation des alias / necessite source ~./bashrc pour etre active
