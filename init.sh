@@ -507,7 +507,7 @@ service cron start
 ######################### Mise en place du serveur nginx ###############################
 
 WEB_DIR='/data/www'
-HOST_NAME='roger-skyline-1.fr'
+HOST_NAME='roger-skyline-1'
 
 echo  -e \"\${GREEN}Configuration de nginx\$RES\"
 
@@ -515,9 +515,9 @@ mkdir -p \$WEB_DIR/\$HOST_NAME/{html,logs}
 chown -R sgauguet:www-data \$WEB_DIR/\$HOST_NAME
 chmod 755 \$WEB_DIR
 
-# cp /etc/nginx/sites-available/default /etc/nginx/sites-available/\$HOST_NAME
+# cp /etc/nginx/sites-available/default /etc/nginx/sites-available/\$HOST_NAME.conf
 
-cat > /etc/nginx/sites-available/\$HOST_NAME <<EOF
+cat > /etc/nginx/sites-available/\$HOST_NAME.conf <<EOF
 server {
     server_name *.\$HOST_NAME;
     return 301 \\\$scheme://\$HOST_NAME\\\$request_uri;
@@ -535,7 +535,7 @@ server {
 }
 EOF
 
-ln -s /etc/nginx/sites-available/\$HOST_NAME /etc/nginx/sites-enabled/\$HOST_NAME 2>/dev/null
+ln -s /etc/nginx/sites-available/\$HOST_NAME.conf /etc/nginx/sites-enabled/\$HOST_NAME.conf 2>/dev/null
 
 cat > \$WEB_DIR/\$HOST_NAME/html/index.html <<EOF
 <!DOCTYPE html>
