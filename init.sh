@@ -124,7 +124,7 @@ do
 done
 }
 
-install vim git sudo net-tools fail2ban nmap openssh-server iptables-persistent curl gnupg2 ca-certificates lsb-release portsentry
+install vim git sudo net-tools fail2ban nmap ssh openssh-server iptables-persistent curl gnupg2 ca-certificates lsb-release portsentry
 
 if [ ! -f /etc/apt/sources.list.d/nginx.list ]
 then
