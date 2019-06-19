@@ -525,10 +525,21 @@ server {
 server {
     server_name \$HOST_NAME;
 
-    Location ~* \.(js|html|css)$ {
-    	root        /data/www/\$HOST_NAME/Test;
-    	expires 30d;
-    }
+	location / {
+		root        /data/www/\$HOST_NAME/html;
+		try_files $uri $uri/ = 404;
+	}
+
+	location /css/ {
+		root        /data/www/\$HOST_NAME/css;
+		try_files $uri $uri/ = 404;
+	}
+
+	location /js/ {
+		root        /data/www/\$HOST_NAME/js;
+		try_files $uri $uri/ = 404;
+	}
+    
     
     # Logs
     access_log \$WEB_DIR/\$HOST_NAME/logs/access.log;
@@ -543,7 +554,7 @@ ln -s /etc/nginx/sites-available/\$HOST_NAME.conf /etc/nginx/sites-enabled/\$HOS
 
 cat > \$WEB_DIR/\$HOST_NAME/html/index.html <<EOF
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:700,600' rel='stylesheet' type='text/css'>
-<link href='../css/index.css' rel='stylesheet' type='text/css'>
+<link href='index.css' rel='stylesheet' type='text/css'>
 <form method='post' action='success.html'>
 <div class='box'>
 <h1>Dashboard</h1>
@@ -561,7 +572,7 @@ cat > \$WEB_DIR/\$HOST_NAME/html/index.html <<EOF
 <p>Forgot your password? <u style='color:#f1c40f;'>Click Here!</u></p>
   
 <script src='//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js' type='text/javascript'></script>
-<script src='../js/index.js' type='text/javascript'></script>
+<script src='index.js' type='text/javascript'></script>
 EOF
 
 cat > \$WEB_DIR/\$HOST_NAME/css/index.css <<EOF
