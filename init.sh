@@ -539,20 +539,34 @@ ln -s /etc/nginx/sites-available/\$HOST_NAME.conf /etc/nginx/sites-enabled/\$HOS
 
 cat > \$WEB_DIR/\$HOST_NAME/html/index.html <<EOF
 <!DOCTYPE html>
-<html lang="en">
-<head>
-        <title>$1</title>
-        <meta charset="utf-8" />
-</head>
-<body class="container">
-        <header><h1>$1<h1></header>
-        <div id="wrapper">
+<?PHP
+	session_start();
+if ($_GET['submit'] == 'OK')
+	{
+		$_SESSION['login'] = $_GET['login'];
+		$_SESSION['passwd'] = $_GET['passwd'];
+	}
+?>
+<HTML>
 
-Hello World
-</div>
-        <footer>© $(date +%Y)</footer>
-</body>
-</html>
+	<HEAD>
+		
+		<meta charset='utf-8' />
+	
+	</HEAD>
+
+	<BODY>
+
+		<form method='get' action='index.php'>
+			Identifiant: <input type ='text' name='login' value=<?PHP echo $_SESSION['login'];?> />
+			<br />
+			Mot de passe: <input type='text' name='passwd' value=<?PHP echo $_SESSION['passwd'];?> />
+			<input type='submit' name='submit' value='OK' />
+		</form>
+
+	</BODY>
+
+</HTML>
 EOF
 
 /usr/local/nginx/sbin/nginx -t 2>/dev/null > /dev/null
