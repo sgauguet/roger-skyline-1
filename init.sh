@@ -538,35 +538,25 @@ EOF
 ln -s /etc/nginx/sites-available/\$HOST_NAME.conf /etc/nginx/sites-enabled/\$HOST_NAME.conf 2>/dev/null
 
 cat > \$WEB_DIR/\$HOST_NAME/html/index.html <<EOF
-<!DOCTYPE html>
-<?PHP
-	session_start();
-if ($_GET['submit'] == 'OK')
-	{
-		$_SESSION['login'] = $_GET['login'];
-		$_SESSION['passwd'] = $_GET['passwd'];
-	}
-?>
-<HTML>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:700,600' rel='stylesheet' type='text/css'>
 
-	<HEAD>
-		
-		<meta charset='utf-8' />
-	
-	</HEAD>
+<form method='post' action='success.html'>
+<div class='box'>
+<h1>Dashboard</h1>
+<input type='email' name='email' value='email' class='email' />
+<input type='password' name='email' value='email' class='email' />
+  
+<a href='#'><div class='btn'>Sign In</div></a> <!-- End Btn -->
 
-	<BODY>
+<a href='#'><div id='btn2'>Sign Up</div></a> <!-- End Btn2 -->
+  
+</div> <!-- End Box -->
+  
+</form>
 
-		<form method='get' action='index.php'>
-			Identifiant: <input type ='text' name='login' value=<?PHP echo $_SESSION['login'];?> />
-			<br />
-			Mot de passe: <input type='text' name='passwd' value=<?PHP echo $_SESSION['passwd'];?> />
-			<input type='submit' name='submit' value='OK' />
-		</form>
-
-	</BODY>
-
-</HTML>
+<p>Forgot your password? <u style='color:#f1c40f;'>Click Here!</u></p>
+  
+<script src='//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js' type='text/javascript'></script>
 EOF
 
 /usr/local/nginx/sbin/nginx -t 2>/dev/null > /dev/null
