@@ -524,8 +524,12 @@ server {
 }
 server {
     server_name \$HOST_NAME;
-    root        /data/www/\$HOST_NAME/html;
 
+    Location ~* \.(js|html|css)$ {
+    	root        /data/www/\$HOST_NAME/Test;
+    	expires 30d;
+    }
+    
     # Logs
     access_log \$WEB_DIR/\$HOST_NAME/logs/access.log;
     error_log  \$WEB_DIR/\$HOST_NAME/logs/error.log;
@@ -680,12 +684,12 @@ function field_focus(field, email)
   }
 
 //Fade in dashboard box
-\$(document).ready(function(){
-    \$('.box').hide().fadeIn(1000);
+\\\$(document).ready(function(){
+    \\\$('.box').hide().fadeIn(1000);
     });
 
 //Stop click event
-\$('a').click(function(event){
+\\\$('a').click(function(event){
     event.preventDefault(); 
 });
 EOF
