@@ -524,20 +524,21 @@ server {
 
 	location / {
 		root        /data/www/\$HOST_NAME/html;
-		try_files \$uri \$uri/ = 404;
+		try_files \\\$uri \\\$uri/ = 404;
 	}
 
 	location ~* \.(css) {
 		root        /data/www/\$HOST_NAME/css;
-		try_files \$uri $uri/ = 404;
+		try_files \\\$uri \\\$uri/ = 404;
 	}
 
 	location ~* \.(js) {
 		root        /data/www/\$HOST_NAME/js;
-		try_files $uri $uri/ = 404;
+		try_files \\\$uri \\\$uri/ = 404;
 	}
-    
-    
+
+	error_page 404 500 501 /error.html;
+
     # Logs
     access_log \$WEB_DIR/\$HOST_NAME/logs/access.log;
     error_log  \$WEB_DIR/\$HOST_NAME/logs/error.log;
@@ -597,7 +598,7 @@ cat > \$WEB_DIR/\$HOST_NAME/html/error.html <<EOF
             <hr>
             <div class='_1'>THE PAGE</div>
             <div class='_2'>WAS NOT FOUND</div>
-            <a class='btn' href='#'>BACK TO MARS</a>
+            <a class='btn' href='index.html'>BACK TO MARS</a>
         </div>
 EOF
 
