@@ -382,16 +382,63 @@ sysctl -p &>/dev/null
 
 # Parametrage de fail2ban
 
+echo \"
+# Fail2Ban configuration file 
+# # supports: ngx_http_limit_conn_module 
+
+[Definition] failregex = limiting connections by zone.*client: <HOST> 
+
+# Option: ignoreregex 
+# Notes.: regex to ignore. If this regex matches, the line is ignored. 
+# Values: TEXT # ignoreregex = 
+\" > \$F2B/filter.d/nginx-conn-limit.conf
+
+echo \"
+# Fail2Ban configuration file # 
+# supports: ngx_http_limit_req_module 
+
+[Definition] failregex = limiting requests, excess:.* by zone.*client: <HOST> 
+
+# Option: ignoreregex 
+# Notes.: regex to ignore. If this regex matches, the line is ignored. # Values: TEXT # ignoreregex =
+\" > \$F2B/filter.d/nginx-req-limit.conf
+
+
 echo  -e \"\${GREEN}Configuration de fail2ban\$RES\"
 cp \$F2B/jail.conf \$F2B/jail.local
-echo \"ignoreip = 127.0.0.1/8, \$IP
-[ssh]
+echo \"
+destemail = USER@student.42.fr
+sender = sgauguet@roger-skyline-1.fr
 
+ignoreip = 127.0.0.1/8, \$IP
+
+[ssh]
 enabled  = true
 port     = 59112
 filter   = sshd
 logpath  = /var/log/auth.log
-maxretry = 6
+maxretry = 2
+findtime = 180
+bantime = 60
+
+[nginx-req-limit] 
+enabled = true 
+filter = nginx-req-limit 
+action = iptables-multiport[name=ReqLimit, port="http,https", protocol=tcp] 
+logpath = /var/log/nginx/*error.log 
+findtime = 600 
+bantime = 7200 
+maxretry = 10 
+
+[nginx-conn-limit] 
+enabled = true 
+filter = nginx-conn-limit 
+action = iptables-multiport[name=ConnLimit, port="http,https", protocol=tcp] 
+logpath = /var/log/nginx/*error.log 
+findtime = 300 
+bantime = 7200 
+maxretry = 100
+
 \" >> \$F2B/jail.local
 
 systemctl enable fail2ban
