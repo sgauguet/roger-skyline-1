@@ -1,0 +1,4 @@
+# scan des ports 1 à 65535 pour l'adresse IP de la VM sans ping
+nmap -Pn 10.177.42.221 -p 1-65535 -v
+# scan des ports en utilisant comme source localhost
+sudo nmap -sS -S 127.0.0.1 10.177.42.221 -p 1-65535 -v
