@@ -379,6 +379,43 @@ sysctl -p &>/dev/null
 
 # Détection et blocage des \"scans de ports\" 
 
+echo  -e \"\${GREEN}Configuration de portsentry\$RES\"
+sed -i '9,\$d' /etc/default/portsentry
+echo \"
+TCP_MODE="atcp"
+UDP_MODE="audp"
+\" >> /etc/default/portsentry
+
+sed -i '9,\$d' /etc/default/portsentry
+echo \"
+TCP_MODE="atcp"
+UDP_MODE="audp"
+\" >> /etc/default/portsentry
+
+sed 's/BLOCK_UDP="0"/BLOCK_UDP="1"/' s/etc/portsentry/portsentry.conf
+sed 's/BLOCK_TCP="0"/BLOCK_TCP="1"/' s/etc/portsentry/portsentry.conf
+
+service portsentry restart
+
+# Arrêt des services non utilisés (systemctl list-unit-files --type=service --state=enabled)
+
+echo  -e \"\${GREEN}Arrêt des services non utiles\$RES\"
+systemctl disable autovt@.service                
+systemctl disable bluetooth.service              
+systemctl disable console-setup.service          
+systemctl disable dbus-org.bluez.service         
+systemctl disable getty@.service                 
+systemctl disable keyboard-setup.service         
+systemctl disable networking.service                               
+systemctl disable resolvconf.service             
+systemctl disable rsync.service                  
+systemctl disable rsyslog.service                                   
+systemctl disable syslog.service                 
+systemctl disable systemd-timesyncd.service                       
+systemctl disable vboxautostart-service.service  
+systemctl disable vboxballoonctrl-service.service
+systemctl disable vboxdrv.service                
+systemctl disable vboxweb-service.service
 
 # Parametrage de fail2ban
 
@@ -476,7 +513,7 @@ apt-get install -f
 
 echo -e \\\"\\\$(date) - Mise à jour des dépôts
 \\\" >> /var/log/update_script.log
-apt-get update >> /var/log/update_script.log
+apt-get update -y >> /var/log/update_script.log
 
 if [[ \\\$? != 0 ]]; then
 echo -e \\\"Erreur de mise à jour des dépôts\\\" >> /var/log/update_script.log
@@ -484,7 +521,7 @@ fi
 
 echo -e \\\"\\\$(date) - Mise à jour des paquets
 \\\" >> /var/log/update_script.log
-apt-get upgrade >> /var/log/update_script.log
+apt-get upgrade -y >> /var/log/update_script.log
 
 if [[ \\\$? != 0 ]]; then
 echo -e \\\"Erreur de mise à jour des paquets\\\" >> /var/log/update_script.log
