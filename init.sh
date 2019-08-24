@@ -382,6 +382,16 @@ sysctl -p &>/dev/null
 
 # Parametrage de fail2ban
 
+sed '12a\
+#Requete maximun par ip 
+limit_req_zone $binary_remote_addr zone=flood:10m rate=100r/s; 
+limit_req zone=flood burst=100 nodelay; 
+
+#Connexions maximum par ip 
+limit_conn_zone $binary_remote_addr zone=ddos:10m; 
+limit_conn ddos 100;
+' < /etc/nginx/nginx.conf
+
 echo \"
 # Fail2Ban configuration file 
 # # supports: ngx_http_limit_conn_module 
