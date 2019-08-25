@@ -136,6 +136,9 @@ then
 	install nginx
 fi
 
+#adduser test
+#adduser test sudo
+
 # Configuration de l'adresse IP
 
 echo -e \"\${GREEN}Configuration du réseau - IP fixe\${RES}\";
