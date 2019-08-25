@@ -248,7 +248,7 @@ IPT=\\\"/sbin/iptables\\\"
 # Blocage par defaut du forward
 \\\$IPT -P FORWARD DROP
 # Blocage par defaut du trafic sortant
-\\\$IPT -P OUTPUT ACCEPT
+\\\$IPT -P OUTPUT DROP
 
 # Blocage des scans XMAS et NULL
 \\\$IPT -A INPUT -p tcp --tcp-flags FIN,URG,PSH FIN,URG,PSH -j DROP
@@ -256,34 +256,8 @@ IPT=\\\"/sbin/iptables\\\"
 \\\$IPT -A INPUT -p tcp --tcp-flags ALL NONE -j DROP
 \\\$IPT -A INPUT -p tcp --tcp-flags SYN,RST SYN,RST -j DROP
 
-# Permettre à une connexion ouverte de recevoir du trafic en entrée.
-\\\$IPT -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
-
 # Pas de filtrage sur la boucle locale
 \\\$IPT -A INPUT -i lo -j ACCEPT
-
-# paquet avec SYN et FIN à la fois
-#\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,SYN FIN,SYN -j DROP
-# paquet avec SYN et RST à la fois
-#\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags SYN,RST SYN,RST -j DROP
-# paquet avec FIN et RST à la fois
-#\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,RST FIN,RST -j DROP
-# paquet avec FIN mais sans ACK
-#\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,ACK FIN -j DROP
-# paquet avec URG mais sans ACK
-#\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags ACK,URG URG -j DROP
-# paquet avec PSH mais sans ACK
-#\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags PSH,ACK PSH -j DROP
-# paquet avec tous les flags à 1 <=> XMAS scan dans Nmap
-#\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG FIN,SYN,RST,PSH,ACK,URG -j DROP
-# paquet avec tous les flags à 0 <=> Null scan dans Nmap
-#\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG NONE -j DROP
-# paquet avec FIN,PSH, et URG mais sans SYN, RST ou ACK
-#\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG FIN,PSH,URG -j DROP
-# paquet avec FIN,SYN,PSH,URG mais sans ACK ou RST
-#\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG FIN,SYN,PSH,URG -j DROP
-# paquet avec FIN,SYN,RST,ACK,URG à 1 mais pas PSH
-#\\\$IPT -A PREROUTING -p tcp -m tcp --tcp-flags FIN,SYN,RST,PSH,ACK,URG FIN,SYN,RST,ACK,URG -j DROP 
 
 # Ping
 \\\$IPT -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
@@ -293,25 +267,11 @@ IPT=\\\"/sbin/iptables\\\"
 # SSH
 \\\$IPT -A INPUT -p tcp --dport 59112 -j ACCEPT
 
-# NTP
-\\\$IPT -A INPUT -p udp --dport 123 -j ACCEPT
+# HTTP
+\\\$IPT -A INPUT -p tcp --dport 80 -j ACCEPT
 
-# smtp
-\\\$IPT -A INPUT -p tcp --dport smtp -j ACCEPT
-
-# imap(s)
-\\\$IPT -A INPUT -p tcp --dport 143 -j ACCEPT
-\\\$IPT -A INPUT -p tcp --dport 993 -j ACCEPT
-
-# dns
-\\\$IPT -A INPUT -p tcp --dport domain -j ACCEPT
-\\\$IPT -A INPUT -p udp --dport domain -j ACCEPT
-
-# http
-\\\$IPT -A INPUT -p tcp --dport http -j ACCEPT
-
-# https
-\\\$IPT -A INPUT -p tcp --dport https -j ACCEPT
+# HTTPS
+\\\$IPT -A INPUT -p tcp --dport 443 -j ACCEPT
 
 # Logs
 \\\$IPT -A INPUT -j LOG --log-prefix \\\"-- IPv4 packet rejected -- \\\"
