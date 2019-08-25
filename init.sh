@@ -608,6 +608,13 @@ service cron start
 WEB_DIR='/data/www'
 HOST_NAME='roger-skyline-1'
 
+echo  -e \"\${GREEN}Création d'un certificat SSL\$RES\"
+cd /etc/ssl
+openssl genrsa -out roger-skyline.key 2048
+openssl req -new -key roger-skyline.key -out roger-skyline.csr
+openssl x509 -req -days 365 -in roger-skyline.csr -signkey roger-skyline.key -out roger-skyline.crt
+
+
 echo  -e \"\${GREEN}Configuration de nginx\$RES\"
 
 mkdir -p \$WEB_DIR/\$HOST_NAME/{html,css,js,logs}
