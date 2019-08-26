@@ -383,7 +383,7 @@ systemctl disable keyboard-setup.service
 
 # Parametrage de fail2ban
 
-cp /etc/nginx/nginx.cong /etc/nginx/nginx.backup
+cp /etc/nginx/nginx.conf /etc/nginx/nginx.backup
 
 sed '12 a \
 #Requete maximun par ip 
