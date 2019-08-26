@@ -427,7 +427,7 @@ echo \"
 echo  -e \"\${GREEN}Configuration de fail2ban\$RES\"
 cp \$F2B/jail.conf \$F2B/jail.local
 echo \"
-destemail = USER@student.42.fr
+destemail = \\$USER@student.42.fr
 sender = sgauguet@roger-skyline-1.fr
 
 ignoreip = 127.0.0.1/8, \$IP
