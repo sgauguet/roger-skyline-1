@@ -368,17 +368,11 @@ sysctl -p &>/dev/null
 echo  -e \"\${GREEN}Configuration de portsentry\$RES\"
 sed -i '9,\$d' /etc/default/portsentry
 echo \"
-TCP_MODE="atcp"
-UDP_MODE="audp"\" >> /etc/default/portsentry
+TCP_MODE=\"atcp\"
+UDP_MODE=\"audp\"\" >> /etc/default/portsentry
 
-sed -i '9,\$d' /etc/default/portsentry
-echo \"
-TCP_MODE="atcp"
-UDP_MODE="audp"
-\" >> /etc/default/portsentry
-
-sed -i "s@BLOCK_UDP=\"0\"@BLOCK_UDP=\"1\"@" /etc/portsentry/portsentry.conf
-sed -i "s@BLOCK_TCP=\"0\"@BLOCK_TCP=\"1\"@" /etc/portsentry/portsentry.conf
+sed -i \"s@BLOCK_UDP=\"0\"@BLOCK_UDP=\"1\"@\" /etc/portsentry/portsentry.conf
+sed -i \"s@BLOCK_TCP=\"0\"@BLOCK_TCP=\"1\"@\" /etc/portsentry/portsentry.conf
 
 service portsentry restart
 
@@ -406,7 +400,7 @@ echo  -e \"\${GREEN}Arrêt des services non utiles\$RES\"
 
 cp /etc/nginx/nginx.conf /etc/nginx/nginx.backup
 
-sed -i "12a #Requete maximun par ip\nlimit_req_zone $binary_remote_addr zone=flood:10m rate=100r/s\n;limit_req zone=flood burst=100 nodelay;\n\n#Connexions maximum par ip\nlimit_conn_zone $binary_remote_addr zone=ddos:10m;\nlimit_conn ddos 100;\n" etc/nginx/nginx.conf
+sed -i \"12a #Requete maximun par ip\nlimit_req_zone \$binary_remote_addr zone=flood:10m rate=100r/s\n;limit_req zone=flood burst=100 nodelay;\n\n#Connexions maximum par ip\nlimit_conn_zone \$binary_remote_addr zone=ddos:10m;\nlimit_conn ddos 100;\n\" etc/nginx/nginx.conf
 
 echo \"
 # Fail2Ban configuration file 
@@ -450,7 +444,7 @@ bantime = 60
 [nginx-req-limit] 
 enabled = true 
 filter = nginx-req-limit 
-action = iptables-multiport[name=ReqLimit, port="http,https", protocol=tcp] 
+action = iptables-multiport[name=ReqLimit, port=\"http,https\", protocol=tcp] 
 logpath = /var/log/nginx/*error.log 
 findtime = 600 
 bantime = 7200 
@@ -459,7 +453,7 @@ maxretry = 10
 [nginx-conn-limit] 
 enabled = true 
 filter = nginx-conn-limit 
-action = iptables-multiport[name=ConnLimit, port="http,https", protocol=tcp] 
+action = iptables-multiport[name=ConnLimit, port=\"http,https\", protocol=tcp] 
 logpath = /var/log/nginx/*error.log 
 findtime = 300 
 bantime = 7200 
@@ -858,7 +852,7 @@ body{
             }
             
             hr:after {
-                content: "\2022";
+                content: \"\2022\";
                 display: inline-block;
                 position: relative;
                 top: -0.75em;
@@ -1003,10 +997,10 @@ EOF
 
 /usr/local/nginx/sbin/nginx -t 2>/dev/null > /dev/null
 if [[ $? == 0 ]]; then
- echo "success"
+ echo \"success\"
  service nginx restart
 else
- echo "fail"
+ echo \"fail\"
 fi
 
 cat > \$WEB_DIR/\$HOST_NAME/js/index.js <<EOF
