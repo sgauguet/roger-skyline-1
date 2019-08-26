@@ -265,6 +265,10 @@ IPT=\\\"/sbin/iptables\\\"
 \\\$IPT -A INPUT -p icmp --icmp-type time-exceeded -j ACCEPT
 \\\$IPT -A INPUT -p icmp --icmp-type destination-unreachable -j ACCEPT
 
+# dns
+\\\$IPT -A INPUT -p tcp --dport domain -j ACCEPT	
+\\\$IPT -A INPUT -p udp --dport domain -j ACCEPT
+
 # SSH
 \\\$IPT -A INPUT -p tcp --dport 59112 -j ACCEPT
 
