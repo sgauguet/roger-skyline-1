@@ -400,7 +400,7 @@ echo  -e \"\${GREEN}Arrêt des services non utiles\$RES\"
 
 cp /etc/nginx/nginx.conf /etc/nginx/nginx.backup
 
-sed -i \"12a #Requete maximun par ip\nlimit_req_zone \$binary_remote_addr zone=flood:10m rate=100r/s\n;limit_req zone=flood burst=100 nodelay;\n\n#Connexions maximum par ip\nlimit_conn_zone \$binary_remote_addr zone=ddos:10m;\nlimit_conn ddos 100;\n\" etc/nginx/nginx.conf
+sed -i \"12a #Requete maximun par ip\nlimit_req_zone \\$binary_remote_addr zone=flood:10m rate=100r/s;\nlimit_req zone=flood burst=100 nodelay;\n\n#Connexions maximum par ip\nlimit_conn_zone \\$binary_remote_addr zone=ddos:10m;\nlimit_conn ddos 100;\n\" /etc/nginx/nginx.conf
 
 echo \"
 # Fail2Ban configuration file 
