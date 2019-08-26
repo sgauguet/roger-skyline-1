@@ -249,9 +249,11 @@ IPT=\\\"/sbin/iptables\\\"
 
 # Blocage par defaut du trafic entrant
 \\\$IPT -P INPUT DROP
+
 # Blocage par defaut du forward
 \\\$IPT -P FORWARD DROP
-# Blocage par defaut du trafic sortant
+
+# Autorisation par defaut du trafic sortant
 \\\$IPT -P OUTPUT ACCEPT
 
 # Blocage des scans XMAS et NULL
@@ -259,6 +261,9 @@ IPT=\\\"/sbin/iptables\\\"
 \\\$IPT -A INPUT -p tcp --tcp-flags ALL ALL -j DROP
 \\\$IPT -A INPUT -p tcp --tcp-flags ALL NONE -j DROP
 \\\$IPT -A INPUT -p tcp --tcp-flags SYN,RST SYN,RST -j DROP
+
+# Permettre à une connexion ouverte de recevoir du trafic en entrée.
+\\\$IPT -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 
 # Pas de filtrage sur la boucle locale
 \\\$IPT -A INPUT -i lo -j ACCEPT
@@ -268,18 +273,28 @@ IPT=\\\"/sbin/iptables\\\"
 \\\$IPT -A INPUT -p icmp --icmp-type time-exceeded -j ACCEPT
 \\\$IPT -A INPUT -p icmp --icmp-type destination-unreachable -j ACCEPT
 
-# dns
-\\\$IPT -A INPUT -p tcp --dport domain -j ACCEPT	
-\\\$IPT -A INPUT -p udp --dport domain -j ACCEPT
-
 # SSH
 \\\$IPT -A INPUT -p tcp --dport 59112 -j ACCEPT
 
-# HTTP
-\\\$IPT -A INPUT -p tcp --dport 80 -j ACCEPT
+# NTP
+\\\$IPT -A INPUT -p udp --dport 123 -j ACCEPT
 
-# HTTPS
-\\\$IPT -A INPUT -p tcp --dport 443 -j ACCEPT
+# smtp
+\\\$IPT -A INPUT -p tcp --dport smtp -j ACCEPT
+
+# imap(s)
+\\\$IPT -A INPUT -p tcp --dport 143 -j ACCEPT
+\\\$IPT -A INPUT -p tcp --dport 993 -j ACCEPT
+
+# dns
+\\\$IPT -A INPUT -p tcp --dport domain -j ACCEPT
+\\\$IPT -A INPUT -p udp --dport domain -j ACCEPT
+
+# http
+\\\$IPT -A INPUT -p tcp --dport http -j ACCEPT
+
+# https
+\\\$IPT -A INPUT -p tcp --dport https -j ACCEPT
 
 # Logs
 \\\$IPT -A INPUT -j LOG --log-prefix \\\"-- IPv4 packet rejected -- \\\"
