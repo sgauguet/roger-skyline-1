@@ -204,8 +204,9 @@ service sshd restart
 # Mise en place de l'acces par publickeys
 
 echo -e \"\${GREEN}Publikeys SSH\${RES}\"
-ssh-keygen -t rsa -f /home/\$USER/.ssh/id_rsa -P \"\"
-ssh-copy-id -f -i /home/\$USER/.ssh/id_rsa.pub -p \$PORT_SSH \$USER@\$IP
+cp $DIRECTORY/publickey ~/.ssh/authorized_keys
+#ssh-keygen -t rsa -f /home/\$USER/.ssh/id_rsa -P \"\"
+#ssh-copy-id -f -i /home/\$USER/.ssh/id_rsa.pub -p \$PORT_SSH \$USER@\$IP
 
 cat \$SSH.backup > \$SSH
 echo \"Port \$PORT_SSH
@@ -369,7 +370,7 @@ systemctl disable console-setup.service
 systemctl disable dbus-org.bluez.service         
 #systemctl disable getty@.service                 
 systemctl disable keyboard-setup.service         
-systemctl disable networking.service                               
+#systemctl disable networking.service                               
 #systemctl disable resolvconf.service             
 systemctl disable rsync.service                  
 systemctl disable rsyslog.service                                   
