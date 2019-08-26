@@ -369,11 +369,11 @@ service portsentry restart
 
 echo  -e \"\${GREEN}Arrêt des services non utiles\$RES\"
 #systemctl disable autovt@.service                
-systemctl disable bluetooth.service              
-systemctl disable console-setup.service          
+#systemctl disable bluetooth.service              
+#systemctl disable console-setup.service          
 #systemctl disable dbus-org.bluez.service         
 #systemctl disable getty@.service                 
-systemctl disable keyboard-setup.service         
+#systemctl disable keyboard-setup.service         
 #systemctl disable networking.service                               
 #systemctl disable resolvconf.service             
 #systemctl disable rsync.service                  
