@@ -31,6 +31,8 @@ echo -e "${INT}**************
 **   INIT  ***
 **************$RES"
 
+apt-get update && apt-get upgrade
+
 echo -e "${GREEN}Gestion des utilisateurs - installation des paquets necessaires$RES"
 if [ $(dpkg-query -W -f='${Status}' sudo 2> /dev/null | grep -c "ok installed") -eq 0 ]; then
 	apt-get install -y sudo
@@ -148,28 +150,29 @@ then
 	echo  -e \"\${GREEN}Sauvegarde des parametres initiaux : \$NI/interfaces.backup \$RES\"
 	cp \$NI/interfaces \$NI/interfaces.backup
 	cp \$RESOLV \$RESOLV.backup
+	
+	echo -e \"\${GREEN}Mise en place de la nouvelle configuration\${RES}\"
+	sed -i '11,\$d' \$NI/interfaces
+	echo \"auto enp0s3
+	iface enp0s3 inet static
+	address \$IP
+	netmask 255.255.255.252
+	broadcast 10.177.42.223
+	network 10.177.42.220
+	gateway 10.177.42.222
+	dns-search 42.fr
+	dns-nameserver 10.51.1.42
+	dns-nameserver 10.51.1.43
+	dns-nameserver 10.188.0.1\" >> /\$NI/interfaces
+	
+	# Mise a jour et test de la configuration du reseau
+
+	ifdown enp0s3 &>/dev/null
+	ifup enp0s3 &>/dev/null
+	/etc/init.d/networking restart
+	echo -e \"\${GREEN}Eteindre la VM et activer le réseau NAT avec CIDR Réseau 10.177.42.220/30,puis rs1-exec\${RES}\"
+	exit 0;
 fi
-
-echo -e \"\${GREEN}Mise en place de la nouvelle configuration\${RES}\"
-
-sed -i '11,\$d' \$NI/interfaces
-echo \"auto enp0s3
-iface enp0s3 inet static
-address \$IP
-netmask 255.255.255.252
-broadcast 10.177.42.223
-network 10.177.42.220
-gateway 10.177.42.222
-dns-search 42.fr
-dns-nameserver 10.51.1.42
-dns-nameserver 10.51.1.43
-dns-nameserver 10.188.0.1\" >> /\$NI/interfaces
-
-# Mise a jour et test de la configuration du reseau
-
-ifdown enp0s3 &>/dev/null
-ifup enp0s3 &>/dev/null
-/etc/init.d/networking restart
 
 echo -e \"\${GREEN}Test de la nouvelle configuration\${RES}\"
 if [ ping -c4 www.google.fr &> /dev/null ]
