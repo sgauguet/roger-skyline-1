@@ -223,7 +223,7 @@ service sshd restart
 # Test de la configuration SSH
 
 echo -e \"\${GREEN}Test de la nouvelle configuration\${RES}\"
-if [ \$(nmap -A -p 59112 --open 10.177.42.220/30 | grep -c open ) -eq 0 ]
+if [ \$(nmap -A -p 59112 --open 10.177.42.221 | grep -c open ) -eq 0 ]
 then
 	echo -e \"\${RED}Echec\$RES\"
 	exit 1;
