@@ -136,7 +136,7 @@ then
 	apt-key fingerprint ABF5BD827BD9BF62
 	apt update
 	apt-get install -y nginx-common
-	apt install nginx
+	apt install -y nginx
 fi
 
 #adduser test
