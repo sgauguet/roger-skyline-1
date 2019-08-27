@@ -524,8 +524,8 @@ systemctl enable update.service
 
 echo -e \"${GREEN}Modification de la crontab\${RES}\"
 crontab -l > cron_list
-echo \"0 4 * * 0 \$NI/update.rules\" >> cron_list
-crontab -u root cron_list
+echo \"0 4 * * 0 root \$NI/update.rules\" >> cron_list
+crontab cron_list
 rm -rf cron_list
 
 fi
@@ -534,6 +534,9 @@ fi
 
 echo  -e \"\${GREEN}Mise en place du suivi des modifications du fichier crontab\$RES\"
 
+if [ ! -f /usr/local/sbin/crontab-updates ]
+then
+
 echo \"#!/bin/bash
 
 # Variables
@@ -541,10 +544,15 @@ CRONTAB='/etc/crontab'
 CRONTAB_LAST_MODIF=\\\$(date -r \\\${CRONTAB} '+%d/%m/%Y %H:%M')
 MAIL_ROOT='root'
 CRONTAB_LOGS='/var/log/crontab.log'
-CRONTAB_REGISTRATION_DATE=\\\$(<\\\$CRONTAB_LOGS)
+CRONTAB_REGISTRATION_DATE=\\\$(\\\$CRONTAB_LOGS)
 MESSAGE=\\\"Le fichier \\\${CRONTAB} a été modifié le \\\${CRONTAB_LAST_MODIF}\\\";
 RED='\033[1;31m'
 RES='\033[0m'
+
+if [ ! -f \\\$CRONTAB_LOGS ]
+then
+	touch \\\$CRONTAB_LOGS
+fi
 
 if [ \\\"\\\${CRONTAB_REGISTRATION_DATE}\\\" != \\\"\\\${CRONTAB_LAST_MODIF}\\\" ]; then
 	if [ ! -z \\\"\\\${CRONTAB_REGISTRATION_DATE}\\\" ]; then
@@ -558,9 +566,10 @@ chmod +x /usr/local/sbin/crontab-updates
 
 echo -e \"${GREEN}Modification de la crontab\${RES}\"
 crontab -l > cron_list
-echo \"*/1 * * * * root /usr/local/sbin/crontab-updates\" >> cron_list
+echo \"0 0 * * * root /usr/local/sbin/crontab-updates\" >> cron_list
 crontab cron_list
 rm -rf cron_list
+fi
 service cron start
 
 ######################### Mise en place du serveur nginx ###############################
