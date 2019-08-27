@@ -135,8 +135,8 @@ then
 	curl -fsSL https://nginx.org/keys/nginx_signing.key | apt-key add -
 	apt-key fingerprint ABF5BD827BD9BF62
 	apt update
+	apt-get install -y nginx-common
 	apt install nginx
-	apt-get install nginx-common
 fi
 
 #adduser test
