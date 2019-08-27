@@ -474,7 +474,8 @@ echo \"#!/bin/bash
 dpkg --configure -a
 apt-get install -f
 
-echo -e \\\"\\\$(date) - Mise à jour des dépôts\\\" >> /var/log/update_script.log
+echo -e \\\"
+\\\$(date) - Mise à jour des dépôts -----\\\" >> /var/log/update_script.log
 apt-get update -y >> /var/log/update_script.log
 
 if [[ \\\$? != 0 ]]; then
@@ -482,7 +483,7 @@ echo -e \\\"Erreur de mise à jour des dépôts\\\" >> /var/log/update_script.lo
 fi
 
 echo -e \\\"
-\\\$(date) - Mise à jour des paquets\\\" >> /var/log/update_script.log
+\\\$(date) - Mise à jour des paquets -----\\\" >> /var/log/update_script.log
 apt-get upgrade -y >> /var/log/update_script.log
 
 if [[ \\\$? != 0 ]]; then
