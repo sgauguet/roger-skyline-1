@@ -135,7 +135,6 @@ then
 	curl -fsSL https://nginx.org/keys/nginx_signing.key | apt-key add -
 	apt-key fingerprint ABF5BD827BD9BF62
 	apt update
-	apt-get install -y nginx-common
 	apt install -y nginx
 fi
 
@@ -401,7 +400,7 @@ echo  -e \"\${GREEN}Arrêt des services non utiles\$RES\"
 
 cp /etc/nginx/nginx.conf /etc/nginx/nginx.backup
 
-sed -i \"12a #Requete maximun par ip\nlimit_req_zone \\\$binary_remote_addr zone=flood:10m rate=100r/s;\nlimit_req zone=flood burst=100 nodelay;\n\n#Connexions maximum par ip\nlimit_conn_zone \\\$binary_remote_addr zone=ddos:10m;\nlimit_conn ddos 100;\n\" /etc/nginx/nginx.conf
+sed -i \"15a #Requete maximun par ip\nlimit_req_zone \\\$binary_remote_addr zone=flood:10m rate=100r/s;\nlimit_req zone=flood burst=100 nodelay;\n\n#Connexions maximum par ip\nlimit_conn_zone \\\$binary_remote_addr zone=ddos:10m;\nlimit_conn ddos 100;\n\" /etc/nginx/nginx.conf
 
 echo \"
 # Fail2Ban configuration file 
@@ -591,9 +590,7 @@ mkdir -p \$WEB_DIR/\$HOST_NAME/{html,css,js,logs}
 chown -R sgauguet:www-data \$WEB_DIR/\$HOST_NAME
 chmod 755 \$WEB_DIR
 
-# cp /etc/nginx/sites-available/default /etc/nginx/sites-available/\$HOST_NAME.conf
-
-cat > /etc/nginx/sites-available/\$HOST_NAME.conf <<EOF
+cat > /etc/nginx/conf.d/\$HOST_NAME.conf <<EOF
 
 server {
     server_name \$HOST_NAME www.\$HOST_NAME;
@@ -623,8 +620,6 @@ server {
     #include global/common.conf;
 }
 EOF
-
-ln -s /etc/nginx/sites-available/\$HOST_NAME.conf /etc/nginx/sites-enabled/\$HOST_NAME.conf 2>/dev/null
 
 cat > \$WEB_DIR/\$HOST_NAME/html/index.html <<EOF
 <link href='https://fonts.googleapis.com/css?family=Open+Sans:700,600' rel='stylesheet' type='text/css'>
