@@ -470,28 +470,19 @@ echo  -e \"\${GREEN}Mise a jour des sources et des paquets\$RES\"
 if [ ! -f \$NI/update.rules ]
 then
 echo \"#!/bin/bash
-### BEGIN INIT INFO
-# Provides:          update
-# Required-Start:    $all
-# Required-Stop:
-# Default-Start:     2 3 4 5 
-# Default-Stop:
-# Short-Description: your description here
-### END INIT INFO
 
 dpkg --configure -a
 apt-get install -f
 
-echo -e \\\"\\\$(date) - Mise à jour des dépôts
-\\\" >> /var/log/update_script.log
+echo -e \\\"\\\$(date) - Mise à jour des dépôts\\\" >> /var/log/update_script.log
 apt-get update -y >> /var/log/update_script.log
 
 if [[ \\\$? != 0 ]]; then
 echo -e \\\"Erreur de mise à jour des dépôts\\\" >> /var/log/update_script.log
 fi
 
-echo -e \\\"\\\$(date) - Mise à jour des paquets
-\\\" >> /var/log/update_script.log
+echo -e \\\"
+\\\$(date) - Mise à jour des paquets\\\" >> /var/log/update_script.log
 apt-get upgrade -y >> /var/log/update_script.log
 
 if [[ \\\$? != 0 ]]; then
