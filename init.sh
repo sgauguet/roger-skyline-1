@@ -368,8 +368,8 @@ sysctl -p &>/dev/null
 echo  -e \"\${GREEN}Configuration de portsentry\$RES\"
 sed -i '9,\$d' /etc/default/portsentry
 echo \"
-TCP_MODE=\"atcp\"
-UDP_MODE=\"audp\"\" >> /etc/default/portsentry
+TCP_MODE=\\\"atcp\\\"
+UDP_MODE=\\\"audp\\\"\" >> /etc/default/portsentry
 
 sed -i \"s@BLOCK_UDP=\\\"0\\\"@BLOCK_UDP=\\\"1\\\"@\" /etc/portsentry/portsentry.conf
 sed -i \"s@BLOCK_TCP=\\\"0\\\"@BLOCK_TCP=\\\"1\\\"@\" /etc/portsentry/portsentry.conf
