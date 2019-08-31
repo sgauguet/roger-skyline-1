@@ -207,7 +207,7 @@ service sshd restart
 # Mise en place de l'acces par publickeys
 
 echo -e \"\${GREEN}Publikeys SSH\${RES}\"
-cp $DIRECTORY/publickey /home/\$USER/.ssh/authorized_keys
+cp $DIRECTORY/config/publickey /home/\$USER/.ssh/authorized_keys
 #ssh-keygen -t rsa -f /home/\$USER/.ssh/id_rsa -P \"\"
 #ssh-copy-id -f -i /home/\$USER/.ssh/id_rsa.pub -p \$PORT_SSH \$USER@\$IP
 
