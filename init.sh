@@ -586,13 +586,23 @@ openssl x509 -req -days 365 -in roger-skyline.csr -signkey roger-skyline.key -ou
 echo  -e \"\${GREEN}Configuration de nginx\$RES\"
 
 mkdir -p \$WEB_DIR/\$HOST_NAME/{html,css,js,logs}
-chown -R sgauguet:www-data \$WEB_DIR/\$HOST_NAME
-chmod 755 \$WEB_DIR
+chown -R nginx:nginx \$WEB_DIR/\$HOST_NAME
+chmod -R 755 \$WEB_DIR
+
+cat > /etc/nginx/conf.d/default.conf <<EOF
+
+server {
+    listen 80;
+    server_name  roger-skyline-1 www.roger-skyline-1 localhost;
+
+    return 301 https://$server_name:8091$request_uri;
+}
+EOF
 
 cat > /etc/nginx/conf.d/\$HOST_NAME.conf <<EOF
 
 server {
-	listen 80 443 ssl;
+	listen 443 ssl;
     	ssl_certificate /etc/ssl/roger-skyline.crt;
     	ssl_certificate_key /etc/ssl/roger-skyline.key;
 	ssl_session_timeout 5m;
