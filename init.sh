@@ -371,7 +371,7 @@ echo \"
 TCP_MODE=\\\"atcp\\\"
 UDP_MODE=\\\"audp\\\"\" >> /etc/default/portsentry
 
-cp config/portsentry /etc/portsentry/portsentry.conf
+cp $DIRECTORY/config/portsentry /etc/portsentry/portsentry.conf
 
 service portsentry restart
 
