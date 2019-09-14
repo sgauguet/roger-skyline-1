@@ -279,9 +279,6 @@ IPT=\\\"/sbin/iptables\\\"
 # NTP
 \\\$IPT -A INPUT -p udp --dport 123 -j ACCEPT
 
-# smtp
-\\\$IPT -A INPUT -p tcp --dport smtp -j ACCEPT
-
 # imap(s)
 \\\$IPT -A INPUT -p tcp --dport 143 -j ACCEPT
 \\\$IPT -A INPUT -p tcp --dport 993 -j ACCEPT
