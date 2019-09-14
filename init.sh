@@ -592,7 +592,7 @@ server {
     listen 80;
     server_name roger-skyline-1 www.roger-skyline-1 localhost;
 
-    return 301 https://\\\$server_name:8091\\\$request_uri;
+    return 301 https://\\\$server_name:8081\\\$request_uri;
 }
 EOF
 
