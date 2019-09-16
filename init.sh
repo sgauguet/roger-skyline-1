@@ -297,11 +297,11 @@ IPT=\\\"/sbin/iptables\\\"
 \\\$IPT -A INPUT -p tcp --dport 59112 -j ACCEPT
 
 # NTP
-\\\$IPT -A INPUT -p udp --dport 123 -j ACCEPT
+#\\\$IPT -A INPUT -p udp --dport 123 -j ACCEPT
 
 # imap(s)
-\\\$IPT -A INPUT -p tcp --dport 143 -j ACCEPT
-\\\$IPT -A INPUT -p tcp --dport 993 -j ACCEPT
+#\\\$IPT -A INPUT -p tcp --dport 143 -j ACCEPT
+#\\\$IPT -A INPUT -p tcp --dport 993 -j ACCEPT
 
 # dns
 \\\$IPT -A INPUT -p tcp --dport domain -j ACCEPT
