@@ -161,7 +161,7 @@ then
 		iface enp0s3 inet static
 		address \$IP_B
 		netmask 255.255.255.252
-		gateway $\GATE_B
+		gateway \$GATE_B
 		dns-search 42.fr
 		dns-nameserver 10.51.1.42
 		dns-nameserver 10.51.1.43
