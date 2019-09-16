@@ -618,7 +618,7 @@ server {
     listen 80;
     server_name \$IP_B;
 
-    return 301 https://\\\$hosts\\\$request_uri;
+    return 301 https://\\\$host\\\$request_uri;
 }
 EOF
 
