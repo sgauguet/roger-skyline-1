@@ -242,14 +242,14 @@ service sshd restart
 
 # Test de la configuration SSH
 
-echo -e \"\${GREEN}Test de la nouvelle configuration\${RES}\"
-if [[ \$(nmap -A -p 59112 --open 10.177.42.221 | grep -c open ) -eq 0 && \$(nmap -A -p 59112 --open \$IP_B | grep -c open ) -eq 0]];
-then
-	echo -e \"\${RED}Echec\$RES\"
-	exit 1;
-else
-	echo -e \"\${GREEN}Success\${RES}\"
-fi
+#echo -e \"\${GREEN}Test de la nouvelle configuration\${RES}\"
+#if [[ \$(nmap -A -p 59112 --open 10.177.42.221 | grep -c open ) -eq 0 && \$(nmap -A -p 59112 --open \$IP_B | grep -c open ) -eq 0]];
+#then
+#	echo -e \"\${RED}Echec\$RES\"
+#	exit 1;
+#else
+#	echo -e \"\${GREEN}Success\${RES}\"
+#fi
 
 ########################## Script de configuration d'iptables ##########################
 
