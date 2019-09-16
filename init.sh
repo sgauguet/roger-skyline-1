@@ -150,8 +150,8 @@ then
 	echo  -e \"\${GREEN}Sauvegarde des parametres initiaux : \$NI/interfaces.backup \$RES\"
 	cp \$NI/interfaces \$NI/interfaces.backup
 	cp \$RESOLV \$RESOLV.backup
-	read -p "bridge or NAT network ? : "  type;
-	if [ \$type === "bridge" ]
+	read -p \"bridge or NAT network ? : \"  type;
+	if [ \"\$\type\"  == \"bridge\" ]
 	then
 		echo -e \"\${GREEN}Mise en place de la nouvelle configuration\${RES}\"
 		sed -i '11,\$d' \$NI/interfaces
@@ -183,7 +183,7 @@ then
 	ifdown enp0s3 &>/dev/null
 	ifup enp0s3 &>/dev/null
 	/etc/init.d/networking restart
-	if [ \$type === "bridge" ]
+	if [ \"\$\type\" == \"bridge\" ]
 	then
 		echo -e \"\${GREEN}Eteindre la VM et activer le mode bridge,puis rs1-exec\${RES}\"
 	else
