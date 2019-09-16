@@ -395,22 +395,18 @@ service portsentry restart
 # Arrêt des services non utilisés (systemctl list-unit-files --type=service --state=enabled)
 
 echo  -e \"\${GREEN}Arrêt des services non utiles\$RES\"
-#systemctl disable autovt@.service                
-#systemctl disable bluetooth.service              
-#systemctl disable console-setup.service          
+#systemctl disable autovt@.service                          
+systemctl disable console-setup.service          
 #systemctl disable dbus-org.bluez.service         
 #systemctl disable getty@.service                 
-#systemctl disable keyboard-setup.service         
+systemctl disable keyboard-setup.service
+systemctl disable sshd.service 
 #systemctl disable networking.service                               
 #systemctl disable resolvconf.service             
-#systemctl disable rsync.service                  
-#systemctl disable rsyslog.service                                   
+systemctl disable rsync.service                  
+systemctl disable rsyslog.service                                   
 #systemctl disable syslog.service                 
-#systemctl disable systemd-timesyncd.service                       
-#systemctl disable vboxautostart-service.service  
-#systemctl disable vboxballoonctrl-service.service
-#systemctl disable vboxdrv.service                
-#systemctl disable vboxweb-service.service
+systemctl disable systemd-timesyncd.service                       
 
 # Parametrage de fail2ban
 
