@@ -150,27 +150,45 @@ then
 	echo  -e \"\${GREEN}Sauvegarde des parametres initiaux : \$NI/interfaces.backup \$RES\"
 	cp \$NI/interfaces \$NI/interfaces.backup
 	cp \$RESOLV \$RESOLV.backup
-	
-	echo -e \"\${GREEN}Mise en place de la nouvelle configuration\${RES}\"
-	sed -i '11,\$d' \$NI/interfaces
-	echo \"auto enp0s3
-	iface enp0s3 inet static
-	address \$IP
-	netmask 255.255.255.252
-	broadcast 10.177.42.223
-	network 10.177.42.220
-	gateway 10.177.42.222
-	dns-search 42.fr
-	dns-nameserver 10.51.1.42
-	dns-nameserver 10.51.1.43
-	dns-nameserver 10.188.0.1\" >> /\$NI/interfaces
-	
+	read -p "bridge or NAT network ? : "  type;
+	if [ \$type === "bridge" ]
+	then
+		echo -e \"\${GREEN}Mise en place de la nouvelle configuration\${RES}\"
+		sed -i '11,\$d' \$NI/interfaces
+		echo \"auto enp0s3
+		iface enp0s3 inet static
+		address 10.11.200.131
+		netmask 255.255.255.252
+		gateway 10.11.254.254
+		dns-search 42.fr
+		dns-nameserver 10.51.1.42
+		dns-nameserver 10.51.1.43
+		dns-nameserver 10.188.0.1\" >> /\$NI/interfaces
+	else
+		echo -e \"\${GREEN}Mise en place de la nouvelle configuration\${RES}\"
+		sed -i '11,\$d' \$NI/interfaces
+		echo \"auto enp0s3
+		iface enp0s3 inet static
+		address \$IP
+		netmask 255.255.255.252
+		broadcast 10.177.42.223
+		network 10.177.42.220
+		gateway 10.177.42.222
+		dns-search 42.fr
+		dns-nameserver 10.51.1.42
+		dns-nameserver 10.51.1.43
+		dns-nameserver 10.188.0.1\" >> /\$NI/interfaces
+	fi
 	# Mise a jour et test de la configuration du reseau
-
 	ifdown enp0s3 &>/dev/null
 	ifup enp0s3 &>/dev/null
 	/etc/init.d/networking restart
-	echo -e \"\${GREEN}Eteindre la VM et activer le réseau NAT avec CIDR Réseau 10.177.42.220/30,puis rs1-exec\${RES}\"
+	if [ \$type === "bridge" ]
+	then
+		echo -e \"\${GREEN}Eteindre la VM et activer le mode bridge,puis rs1-exec\${RES}\"
+	else
+		echo -e \"\${GREEN}Eteindre la VM et activer le réseau NAT avec CIDR Réseau 10.177.42.220/30,puis rs1-exec\${RES}\"
+	fi
 	exit 0;
 fi
 
