@@ -93,6 +93,8 @@ SSH='/etc/ssh/sshd_config'
 F2B='/etc/fail2ban'
 USER='sgauguet'
 IP='10.177.42.221'
+IP_B='10.11.200.131'
+GATE_B='10.11.254.254'
 PORT_SSH='59112'
 
 # Couleurs
@@ -150,16 +152,16 @@ then
 	echo  -e \"\${GREEN}Sauvegarde des parametres initiaux : \$NI/interfaces.backup \$RES\"
 	cp \$NI/interfaces \$NI/interfaces.backup
 	cp \$RESOLV \$RESOLV.backup
-	read -p \"bridge or NAT network ? : \"  type;
-	if [ \"\$\type\"  == \"bridge\" ]
+	read -p \"bridge or NAT network ?:  \"  type;
+	if [ \"\$type\"  == \"bridge\" ]
 	then
 		echo -e \"\${GREEN}Mise en place de la nouvelle configuration\${RES}\"
 		sed -i '11,\$d' \$NI/interfaces
 		echo \"auto enp0s3
 		iface enp0s3 inet static
-		address 10.11.200.131
+		address \$IP_B
 		netmask 255.255.255.252
-		gateway 10.11.254.254
+		gateway $\GATE_B
 		dns-search 42.fr
 		dns-nameserver 10.51.1.42
 		dns-nameserver 10.51.1.43
@@ -183,7 +185,7 @@ then
 	ifdown enp0s3 &>/dev/null
 	ifup enp0s3 &>/dev/null
 	/etc/init.d/networking restart
-	if [ \"\$\type\" == \"bridge\" ]
+	if [ \"\$type\" == \"bridge\" ]
 	then
 		echo -e \"\${GREEN}Eteindre la VM et activer le mode bridge,puis rs1-exec\${RES}\"
 	else
@@ -612,6 +614,12 @@ server {
 
     return 301 https://\\\$server_name:8081\\\$request_uri;
 }
+server {
+    listen 80;
+    server_name \$IP_B;
+
+    return 301 https://\\\$hosts\\\$request_uri;
+}
 EOF
 
 cat > /etc/nginx/conf.d/\$HOST_NAME.conf <<EOF
@@ -626,7 +634,7 @@ server {
 	ssl_prefer_server_ciphers   on;
 	ssl_session_cache           shared:SSL:10m;
 	
-	server_name \$HOST_NAME www.\$HOST_NAME;
+	server_name \$HOST_NAME www.\$HOST_NAME \$IP_B;
 	location / {
 		root        /data/www/\$HOST_NAME/html;
 		try_files \\\$uri \\\$uri/ = 404;
