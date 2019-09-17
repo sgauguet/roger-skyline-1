@@ -1080,6 +1080,8 @@ function field_focus(field, email)
 
 EOF
 
+service fail2ban restart 
+
 " > $DIRECTORY/deployment.sh
 
 ########################################################################################
