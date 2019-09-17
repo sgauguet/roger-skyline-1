@@ -466,8 +466,8 @@ bantime = 60
 
 [nginx-req-limit] 
 enabled = true 
-filter = nginx-req-limit 
-action = iptables-multiport[name=ReqLimit, port=\"http,https\", protocol=tcp] 
+filter = nginx-req-limit
+action = iptables-multiport[name=nginx-req-limit, port=\"http,https\", protocol=tcp] 
 logpath = /var/log/nginx/*error.log 
 findtime = 600 
 bantime = 7200 
