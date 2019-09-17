@@ -400,7 +400,7 @@ systemctl disable console-setup.service
 #systemctl disable dbus-org.bluez.service         
 #systemctl disable getty@.service                 
 systemctl disable keyboard-setup.service
-systemctl disable sshd.service 
+#systemctl disable sshd.service 
 #systemctl disable networking.service                               
 #systemctl disable resolvconf.service             
 systemctl disable rsync.service                  
