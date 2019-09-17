@@ -416,23 +416,34 @@ sed -i \"15a #Requete maximun par ip\nlimit_req_zone \\\$binary_remote_addr zone
 
 echo \"
 # Fail2Ban configuration file 
-# # supports: ngx_http_limit_conn_module 
+# 
+# supports: ngx_http_limit_conn_module 
 
-[Definition] failregex = limiting connections by zone.*client: <HOST> 
+[Definition] 
+
+failregex = limiting connections by zone.*client: <HOST> 
 
 # Option: ignoreregex 
 # Notes.: regex to ignore. If this regex matches, the line is ignored. 
-# Values: TEXT # ignoreregex = 
+# Values: TEXT 
+# 
+ignoreregex = 
 \" > \$F2B/filter.d/nginx-conn-limit.conf
 
 echo \"
-# Fail2Ban configuration file # 
+# Fail2Ban configuration file 
+# 
 # supports: ngx_http_limit_req_module 
 
-[Definition] failregex = limiting requests, excess:.* by zone.*client: <HOST> 
+[Definition] 
+
+failregex = limiting requests, excess:.* by zone.*client: <HOST> 
 
 # Option: ignoreregex 
-# Notes.: regex to ignore. If this regex matches, the line is ignored. # Values: TEXT # ignoreregex =
+# Notes.: regex to ignore. If this regex matches, the line is ignored. 
+# Values: TEXT 
+# 
+ignoreregex =
 \" > \$F2B/filter.d/nginx-req-limit.conf
 
 
