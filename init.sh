@@ -437,7 +437,7 @@ echo \"
 
 [Definition] 
 
-failregex = ^<HOST> -.*\"(GET|POST).*HTTP.*\"$
+failregex = ^<HOST> -.*\\\"(GET|POST).*HTTP.*\\\"$
 
 # Option: ignoreregex 
 # Notes.: regex to ignore. If this regex matches, the line is ignored. 
