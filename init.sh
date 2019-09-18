@@ -413,6 +413,7 @@ systemctl disable systemd-timesyncd.service
 cp /etc/nginx/nginx.conf /etc/nginx/nginx.backup
 
 if [ ! -f /etc/nginx/nginx.backup ]
+then
 sed -i \"15a #Requete maximun par ip\nlimit_req_zone \\\$binary_remote_addr zone=flood:10m rate=1r/s;\n#Connexions maximum par ip\nlimit_conn_zone \\\$binary_remote_addr zone=ddos:10m;\n\" /etc/nginx/nginx.conf
 fi
 
