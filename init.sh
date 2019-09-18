@@ -456,38 +456,38 @@ before = common.conf
 _daemon = sshd
  
 failregex = Bad protocol version identification .* from <HOST> .*
-            ^%(__prefix_line)s(?:error: PAM: )?[aA]uthentication (?:failure|error|failed) for .* from <HOST>( via \S+)?    \s*$
-            ^%(__prefix_line)s(?:error: PAM: )?User not known to the underlying authentication module for .* from <HOST    >\s*$
-            ^%(__prefix_line)sFailed \S+ for (?P<cond_inv>invalid user )?(?P<user>(?P<cond_user>\S+)|(?(cond_inv)(?:(?!     from ).)*?|[^:]+)) from <HOST>(?: port \d+)?(?: ssh\d*)?(?(cond_user):|(?:(?:(?! from ).)*)$)
-            ^%(__prefix_line)sROOT LOGIN REFUSED.* FROM <HOST>\s*$
-            ^%(__prefix_line)s[iI](?:llegal|nvalid) user .*? from <HOST>(?: port \d+)?\s*$
-            ^%(__prefix_line)sUser .+ from <HOST> not allowed because not listed in AllowUsers\s*$
-            ^%(__prefix_line)sUser .+ from <HOST> not allowed because listed in DenyUsers\s*$
-            ^%(__prefix_line)sUser .+ from <HOST> not allowed because not in any group\s*$
-            ^%(__prefix_line)srefused connect from \S+ \(<HOST>\)\s*$
-            ^%(__prefix_line)s(?:error: )?Received disconnect from <HOST>: 3: .*: Auth fail(?: \[preauth\])?$
-            ^%(__prefix_line)sUser .+ from <HOST> not allowed because a group is listed in DenyGroups\s*$
-            ^%(__prefix_line)sUser .+ from <HOST> not allowed because none of user's groups are listed in AllowGroups\s*    $
-            ^(?P<__prefix>%(__prefix_line)s)User .+ not allowed because account is locked<SKIPLINES>(?P=__prefix)(?:err    or: )?Received disconnect from <HOST>: 11: .+ \[preauth\]$
-            ^(?P<__prefix>%(__prefix_line)s)Disconnecting: Too many authentication failures for .+? \[preauth\]<SKIPLIN    ES>(?P=__prefix)(?:error: )?Connection closed by <HOST> \[preauth\]$
-            ^(?P<__prefix>%(__prefix_line)s)Connection from <HOST> port \d+(?: on \S+ port \d+)?<SKIPLINES>(?P=__prefix    )Disconnecting: Too many authentication failures for .+? \[preauth\]$
-            ^%(__prefix_line)s(error: )?maximum authentication attempts exceeded for .* from <HOST>(?: port \d*)?(?: ss    h\d*)? \[preauth\]$
-            ^%(__prefix_line)spam_unix\(sshd:auth\):\s+authentication failure;\s*logname=\S*\s*uid=\d*\s*euid=\d*\s*tty    =\S*\s*ruser=\S*\s*rhost=<HOST>\s.*$
+            ^%(__prefix_line)s(?:error: PAM: )?[aA]uthentication (?:failure|error|failed) for .* from <HOST>( via \\S+)?    \\s*$
+            ^%(__prefix_line)s(?:error: PAM: )?User not known to the underlying authentication module for .* from <HOST    >\\s*$
+            ^%(__prefix_line)sFailed \\S+ for (?P<cond_inv>invalid user )?(?P<user>(?P<cond_user>\\S+)|(?(cond_inv)(?:(?!     from ).)*?|[^:]+)) from <HOST>(?: port \\d+)?(?: ssh\\d*)?(?(cond_user):|(?:(?:(?! from ).)*)$)
+            ^%(__prefix_line)sROOT LOGIN REFUSED.* FROM <HOST>\\s*$
+            ^%(__prefix_line)s[iI](?:llegal|nvalid) user .*? from <HOST>(?: port \\d+)?\\s*$
+            ^%(__prefix_line)sUser .+ from <HOST> not allowed because not listed in AllowUsers\\s*$
+            ^%(__prefix_line)sUser .+ from <HOST> not allowed because listed in DenyUsers\\s*$
+            ^%(__prefix_line)sUser .+ from <HOST> not allowed because not in any group\\s*$
+            ^%(__prefix_line)srefused connect from \\S+ \\(<HOST>\\)\\s*$
+            ^%(__prefix_line)s(?:error: )?Received disconnect from <HOST>: 3: .*: Auth fail(?: \\[preauth\\])?$
+            ^%(__prefix_line)sUser .+ from <HOST> not allowed because a group is listed in DenyGroups\\s*$
+            ^%(__prefix_line)sUser .+ from <HOST> not allowed because none of user\x27s groups are listed in AllowGroups\\s*    $
+            ^(?P<__prefix>%(__prefix_line)s)User .+ not allowed because account is locked<SKIPLINES>(?P=__prefix)(?:err    or: )?Received disconnect from <HOST>: 11: .+ \\[preauth\\]$
+            ^(?P<__prefix>%(__prefix_line)s)Disconnecting: Too many authentication failures for .+? \\[preauth\\]<SKIPLIN    ES>(?P=__prefix)(?:error: )?Connection closed by <HOST> \\[preauth\\]$
+            ^(?P<__prefix>%(__prefix_line)s)Connection from <HOST> port \\d+(?: on \\S+ port \\d+)?<SKIPLINES>(?P=__prefix    )Disconnecting: Too many authentication failures for .+? \\[preauth\\]$
+            ^%(__prefix_line)s(error: )?maximum authentication attempts exceeded for .* from <HOST>(?: port \\d*)?(?: ss    h\\d*)? \\[preauth\\]$
+            ^%(__prefix_line)spam_unix\\(sshd:auth\\):\\s+authentication failure;\\s*logname=\\S*\\s*uid=\\d*\\s*euid=\\d*\\s*tty    =\\S*\\s*ruser=\\S*\\s*rhost=<HOST>\\s.*$
 
 ignoreregex =
 
 [Init]
 
-# "maxlines" is number of log lines to buffer for multi-line regex searches
+# \"maxlines\" is number of log lines to buffer for multi-line regex searches
 maxlines = 10
 
 journalmatch = _SYSTEMD_UNIT=sshd.service + _COMM=sshd
  
 # DEV Notes:
 #
-#   "Failed \S+ for .*? from <HOST>..." failregex uses non-greedy catch-all because
+#   \"Failed \\S+ for .*? from <HOST>...\" failregex uses non-greedy catch-all because
 #   it is coming before use of <HOST> which is not hard-anchored at the end as well,
-#   and later catch-all's could contain user-provided input, which need to be greedily
+#   and later catch-all\x27s could contain user-provided input, which need to be greedily
 #   matched away first.
 #
 # Author: Cyril Jaquier, Yaroslav Halchenko, Petr Voralek, Daniel Blac
