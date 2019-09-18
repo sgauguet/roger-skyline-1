@@ -498,7 +498,7 @@ ignoreregex =
 
 echo  -e \"\${GREEN}Configuration de fail2ban\$RES\"
 cp \$F2B/jail.conf \$F2B/jail.local
-sed -i '224,229' \$F2B/jail.local
+sed -i '224,229d' \$F2B/jail.local
 echo \"
 destemail = \\$USER@student.42.fr
 sender = sgauguet@roger-skyline-1.fr
