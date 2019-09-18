@@ -518,7 +518,7 @@ action = iptables-multiport[name=SSH, port=59112, protocol=tcp]
 enabled = true 
 filter = nginx-req-limit
 action = iptables-multiport[name=nginx-req-limit, port=\"http,https\", protocol=tcp] 
-logpath = /var/log/nginx/*error.log 
+logpath = /var/log/nginx/access.log 
 findtime = 600 
 bantime = 7200 
 maxretry = 10 
