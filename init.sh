@@ -412,7 +412,9 @@ systemctl disable systemd-timesyncd.service
 
 cp /etc/nginx/nginx.conf /etc/nginx/nginx.backup
 
-sed -i \"15a #Requete maximun par ip\nlimit_req_zone \\\$binary_remote_addr zone=flood:10m rate=1r/s;\nlimit_req zone=flood burst=100 nodelay;\n\n#Connexions maximum par ip\nlimit_conn_zone \\\$binary_remote_addr zone=ddos:10m;\nlimit_conn ddos 100;\n\" /etc/nginx/nginx.conf
+if [ ! -f /etc/nginx/nginx.backup ]
+sed -i \"15a #Requete maximun par ip\nlimit_req_zone \\\$binary_remote_addr zone=flood:10m rate=1r/s;\n#Connexions maximum par ip\nlimit_conn_zone \\\$binary_remote_addr zone=ddos:10m;\n\" /etc/nginx/nginx.conf
+fi
 
 echo \"
 # Fail2Ban configuration file 
@@ -666,12 +668,16 @@ cat > /etc/nginx/conf.d/default.conf <<EOF
 server {
     listen 80;
     server_name roger-skyline-1 www.roger-skyline-1 localhost;
+    limit_req zone=flood burst=100 nodelay;
+    limit_conn ddos 100;
 
     return 301 https://\\\$server_name:8081\\\$request_uri;
 }
 server {
     listen 80;
     server_name \$IP_B;
+    limit_req zone=flood burst=100 nodelay;
+    limit_conn ddos 100;
 
     return 301 https://\\\$host\\\$request_uri;
 }
