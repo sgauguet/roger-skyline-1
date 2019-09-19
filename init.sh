@@ -286,7 +286,7 @@ IPT=\\\"/sbin/iptables\\\"
 #\\\$IPT -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 
 # Pas de filtrage sur la boucle locale
-\\\$IPT -A INPUT -i lo -j ACCEPT
+#\\\$IPT -A INPUT -i lo -j ACCEPT
 
 # Ping
 \\\$IPT -A INPUT -p icmp --icmp-type echo-request -j ACCEPT
