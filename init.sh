@@ -283,7 +283,7 @@ IPT=\\\"/sbin/iptables\\\"
 \\\$IPT -A INPUT -p tcp --tcp-flags SYN,RST SYN,RST -j DROP
 
 # Permettre à une connexion ouverte de recevoir du trafic en entrée.
-\\\$IPT -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+#\\\$IPT -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 
 # Pas de filtrage sur la boucle locale
 \\\$IPT -A INPUT -i lo -j ACCEPT
