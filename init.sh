@@ -626,7 +626,7 @@ RES='\033[0m'
 
 if [ ! -f \\\$CRONTAB_LOGS ]
 then
-	touch \\\$CRONTAB_LOGS
+	echo \\\$CRONTAB_LAST_MODIF > \\\$CRONTAB_LOGS
 fi
 
 if [ \\\"\\\${CRONTAB_REGISTRATION_DATE}\\\" != \\\"\\\${CRONTAB_LAST_MODIF}\\\" ]; then
