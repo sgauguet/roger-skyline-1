@@ -616,7 +616,7 @@ echo \"#!/bin/bash
 
 # Variables
 CRONTAB='/etc/crontab'
-CRONTAB_LAST_MODIF=\\\$(date -r \\\${CRONTAB} '+%d/%m/%Y %H:%M')
+CRONTAB_LAST_MODIF=\\\$(date -r \\\${CRONTAB} '+%d/%m/%Y %H:%M:%S')
 MAIL_ROOT='root'
 CRONTAB_LOGS='/var/log/crontab.log'
 CRONTAB_REGISTRATION_DATE=\\\$(cat \\\$CRONTAB_LOGS)
