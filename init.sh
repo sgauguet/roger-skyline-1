@@ -307,7 +307,7 @@ IPT=\\\"/sbin/iptables\\\"
 
 # dns
 \\\$IPT -A INPUT -p tcp --dport domain -j ACCEPT
-#\\\$IPT -A INPUT -p udp --dport domain -j ACCEPT
+\\\$IPT -A INPUT -p udp --dport domain -j DROP
 
 # http
 \\\$IPT -A INPUT -p tcp --dport http -j ACCEPT
