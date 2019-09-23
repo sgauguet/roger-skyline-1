@@ -277,7 +277,6 @@ IPT=\\\"/sbin/iptables\\\"
 
 # Autorisation par defaut du trafic sortant
 \\\$IPT -P OUTPUT ACCEPT
-\\\$IPT -A OUTPUT -p udp -j DROP
 
 # Blocage des scans XMAS et NULL
 \\\$IPT -A INPUT -p tcp --tcp-flags FIN,URG,PSH FIN,URG,PSH -j DROP
@@ -286,7 +285,7 @@ IPT=\\\"/sbin/iptables\\\"
 \\\$IPT -A INPUT -p tcp --tcp-flags SYN,RST SYN,RST -j DROP
 
 # Permettre à une connexion ouverte de recevoir du trafic en entrée.
-#\\\$IPT -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
+\\\$IPT -A INPUT -m state --state ESTABLISHED,RELATED -j ACCEPT
 
 # Pas de filtrage sur la boucle locale
 #\\\$IPT -A INPUT -i lo -j ACCEPT
