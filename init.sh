@@ -140,6 +140,8 @@ then
 	apt install -y nginx
 fi
 
+apt-get -y remove exim4 exim4-base exim4-config exim4-daemon-light
+
 #adduser test
 #adduser test sudo
 
