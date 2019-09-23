@@ -277,6 +277,7 @@ IPT=\\\"/sbin/iptables\\\"
 
 # Autorisation par defaut du trafic sortant
 \\\$IPT -P OUTPUT ACCEPT
+\\\$IPT -A OUTPUT -p udp -j DROP
 
 # Blocage des scans XMAS et NULL
 \\\$IPT -A INPUT -p tcp --tcp-flags FIN,URG,PSH FIN,URG,PSH -j DROP
