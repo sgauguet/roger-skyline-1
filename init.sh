@@ -140,7 +140,7 @@ then
 	apt install -y nginx
 fi
 
-apt-get -y remove exim4 exim4-base exim4-config exim4-daemon-light
+#apt-get -y remove exim4 exim4-base exim4-config exim4-daemon-light
 
 #adduser test
 #adduser test sudo
@@ -308,7 +308,7 @@ IPT=\\\"/sbin/iptables\\\"
 
 # dns
 \\\$IPT -A INPUT -p tcp --dport domain -j ACCEPT
-\\\$IPT -A INPUT -p udp --dport domain -j DROP
+\\\$IPT -A INPUT -p udp --dport domain -j ACCEPT
 
 # http
 \\\$IPT -A INPUT -p tcp --dport http -j ACCEPT
